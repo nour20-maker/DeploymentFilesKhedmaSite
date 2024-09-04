@@ -20,7 +20,7 @@ pipeline {
               value: ""
           resources:
             limits:
-              memory: "1.3Gi"
+              memory: "1.4Gi"
               cpu: "250m"
             requests:
               memory: "512Mi"
@@ -48,7 +48,7 @@ pipeline {
       steps {
         container('git') {
           withCredentials([usernamePassword(credentialsId: env.GIT_CREDENTIALS_ID, usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
-            sh 'git clone https://${GIT_USER}:${GIT_PASS}@github.com/OnsFadhele/khedmadeploy.git'
+            sh 'git clone https://${GIT_USER}:${GIT_PASS}@github.com/nour10-maker/dev_team_khedmasite.git'
           }
         }
       }
@@ -77,7 +77,7 @@ pipeline {
 
                 images.each { image ->
                   sh """
-                    cd khedmadeploy/${image.path}
+                    cd dev_team_khedmasite/${image.path}
                     docker build --progress=plain -t lou4y/${image.name}:${COMMIT_HASH} .
                   """
                   // Show image size
