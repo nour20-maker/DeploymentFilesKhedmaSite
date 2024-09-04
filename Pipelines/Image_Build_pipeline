@@ -20,11 +20,11 @@ pipeline {
               value: ""
           resources:
             limits:
-              memory: "1.4Gi"
-              cpu: "250m"
+              memory: "1.5Gi"
+              cpu: "300m"
             requests:
-              memory: "512Mi"
-              cpu: "100m"
+              memory: "1Gi"
+              cpu: "200m"
           volumeMounts:
            - mountPath: /var/lib/docker
              name: docker-graph-storage
