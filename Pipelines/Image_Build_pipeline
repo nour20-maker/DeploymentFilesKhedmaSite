@@ -20,10 +20,10 @@ pipeline {
               value: ""
           resources:
             limits:
-              memory: "4Gi"
+              memory: "3Gi"
               cpu: "300m"
             requests:
-              memory: "2Gi"
+              memory: "1.2Gi"
               cpu: "200m"
           volumeMounts:
            - mountPath: /var/lib/docker
