@@ -20,7 +20,7 @@ pipeline {
               value: ""
           resources:
             limits:
-              memory: "2Gi"
+              memory: "4Gi"
               cpu: "300m"
             requests:
               memory: "1Gi"
