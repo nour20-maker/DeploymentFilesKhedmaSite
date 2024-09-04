@@ -58,7 +58,7 @@ pipeline {
         container('git') {
           script {
             // Capture the short commit hash
-            COMMIT_HASH = sh(script: 'git -C khedmadeploy rev-parse --short HEAD', returnStdout: true).trim()
+            COMMIT_HASH = sh(script: 'git -C dev_team_khedmasite rev-parse --short HEAD', returnStdout: true).trim()
             echo "Commit hash: ${COMMIT_HASH}"
           }
         }
