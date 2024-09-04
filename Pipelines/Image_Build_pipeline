@@ -23,7 +23,7 @@ pipeline {
               memory: "2Gi"
               cpu: "300m"
             requests:
-              memory: "1.5Gi"
+              memory: "1.2Gi"
               cpu: "200m"
           volumeMounts:
            - mountPath: /var/lib/docker
