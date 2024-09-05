@@ -18,19 +18,25 @@ pipeline {
           env:
             - name: DOCKER_TLS_CERTDIR
               value: ""
+            - name: DOCKER_RAMDISK
+              value: "true"
+            - name: DOCKER_OPTS
+              value: "--storage-driver=overlay2 --storage-opt dm.basesize=10G"
           resources:
             limits:
-              memory: "4Gi"
-              cpu: "300m"
+              memory: "3Gi"
+              cpu: "500m"
             requests:
-              memory: "1Gi"
-              cpu: "200m"
+              memory: "1.3Gi"
+              cpu: "300m"
           volumeMounts:
-           - mountPath: /var/lib/docker
-             name: docker-graph-storage
+            - mountPath: /var/lib/docker
+              name: docker-graph-storage
         volumes:
         - name: docker-graph-storage
-          emptyDir: {}
+          emptyDir:
+            medium: "Memory"
+            sizeLimit: "2Gi"
       '''
     }
   }
