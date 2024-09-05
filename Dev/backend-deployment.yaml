@@ -15,9 +15,12 @@ spec:
     spec:
       containers:
       - name: backend
-        image: lou4y/backend:4c6b0f138
+        image: lou4y/backend:5f7106fb1
         ports:
         - containerPort: 8000
+        env:
+        - name: DJANGO_SETTINGS_MODULE
+          value: "khedma.settings_prod"
         volumeMounts:
         - name: media-volume
           mountPath: /django/khedma/media
