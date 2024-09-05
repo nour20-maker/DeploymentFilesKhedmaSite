@@ -53,6 +53,18 @@ pipeline {
         }
       }
     }
+
+    stage('Get Commit Hash') {
+      steps {
+        container('git') {
+          script {
+            // Capture the short commit hash
+            COMMIT_HASH = sh(script: 'git -C dev_team_khedmasite rev-parse --short HEAD', returnStdout: true).trim()
+            echo "Commit hash: ${COMMIT_HASH}"
+          }
+        }
+      }
+    }
         stage('Update Kubernetes YAML with New Image Tags') {
   steps {
     container('git') {
@@ -81,18 +93,6 @@ pipeline {
     }
   }
 }
-    stage('Get Commit Hash') {
-      steps {
-        container('git') {
-          script {
-            // Capture the short commit hash
-            COMMIT_HASH = sh(script: 'git -C dev_team_khedmasite rev-parse --short HEAD', returnStdout: true).trim()
-            echo "Commit hash: ${COMMIT_HASH}"
-          }
-        }
-      }
-    }
-
     stage('Build Docker Images') {
       steps {
         container('dind') {
