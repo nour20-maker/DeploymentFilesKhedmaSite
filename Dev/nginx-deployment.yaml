@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: lou4y/nginx:51e1d5bbf
+        image: lou4y/nginx:4c6b0f138
         ports:
         - containerPort: 80
         volumeMounts:
