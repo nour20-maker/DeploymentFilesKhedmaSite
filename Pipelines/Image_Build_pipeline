@@ -73,11 +73,27 @@ pipeline {
             sh """
               cd dev_team_khedmasite/django/khedma
               # Update manage.py to use settings_prod
-              sed -i "s|os.getenv('DJANGO_SETTINGS_MODULE', 'khedma.settings')|os.getenv('DJANGO_SETTINGS_MODULE', 'khedma.settings_prod')|" manage.py
+              sed -i "s|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings')|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings_prod')|" manage.py
               
               # Print the updated manage.py for debugging
               echo "Updated manage.py:"
               cat manage.py
+              cd khedma
+              # Update wsgi.py to settings_prod 
+              sed -i "s|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings')|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings_prod')|" asgi.py
+              # Print the updated asgi.py for debugging
+              echo "Updated asgi.py:"
+              cat asgi.py
+          
+              
+              # Update wsgi.py to use settings_prod
+              sed -i "s|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings')|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings_prod')|" wsgi.py
+              
+              # Print the updated wsgi.py for debugging
+              echo "Updated wsgi.py:"
+              cat wsgi.py
+
+
             """
           }
         }
