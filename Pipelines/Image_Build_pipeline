@@ -64,23 +64,6 @@ pipeline {
         }
       }
     }
- stage('Modify manage.py and wsgi.py') {
-    steps {
-        script {
-            // Ensure Jenkins has the necessary permissions
-            sh '''
-            chmod +w dev_team_khedmasite/django/khedma/manage.py
-            chmod +w dev_team_khedmasite/django/khedma/khedma/wsgi.py
-
-            # Replace 'khedma.settings' with 'khedma.settings_prod' in manage.py
-            sed -i 's/khedma.settings/khedma.settings_prod/g' dev_team_khedmasite/django/khedma/manage.py
-
-            # Replace 'khedma.settings' with 'khedma.settings_prod' in wsgi.py
-            sed -i 's/khedma.settings/khedma.settings_prod/g' dev_team_khedmasite/django/khedma/khedma/wsgi.py
-            '''
-        }
-    }
-}
 
     stage('Build Docker Images') {
       steps {
