@@ -72,7 +72,10 @@ pipeline {
         sh '''
           # Clone the repository
           git clone https://${GIT_USER}:${GIT_PASS}@github.com/nour20-maker/DeploymentFilesKhedmaSite.git
-          
+        '''
+      }
+      script{
+          sh """
           cd DeploymentFilesKhedmaSite
           git config --global user.name "${GIT_USER_NAME}"
           git config --global user.email "${GIT_USER_EMAIL}"
@@ -88,7 +91,7 @@ pipeline {
           git add .
           git commit -m "Update image tags to ${COMMIT_HASH}" || echo "No changes to commit"
           git push
-        '''
+          """
       }
     }
   }
