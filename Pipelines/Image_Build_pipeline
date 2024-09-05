@@ -24,11 +24,11 @@ pipeline {
               value: "--storage-driver=overlay2 --storage-opt dm.basesize=10G"
           resources:
             limits:
-              memory: "3Gi"
-              cpu: "500m"
+              memory: "2Gi"
+              cpu: "300m"
             requests:
               memory: "1.3Gi"
-              cpu: "300m"
+              cpu: "200m"
           volumeMounts:
             - mountPath: /var/lib/docker
               name: docker-graph-storage
