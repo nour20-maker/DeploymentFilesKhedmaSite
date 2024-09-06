@@ -65,37 +65,7 @@ pipeline {
         }
       }
     }
-        stage('Update Kubernetes YAML with New Image Tags') {
-      steps {
-        container('git') {
-          withCredentials([usernamePassword(credentialsId: env.GIT_CREDENTIALS_ID, usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
-            sh '''
-              # Clone the repository
-              git clone https://${GIT_USER}:${GIT_PASS}@github.com/nour20-maker/DeploymentFilesKhedmaSite.git
-              '''
-            script {
-              sh """
-              cd DeploymentFilesKhedmaSite
-              git config --global user.name "${GIT_USER_NAME}"
-              git config --global user.email "${GIT_USER_EMAIL}"
-              
-              # Print the current commit hash for debugging
-              echo "Commit hash: ${COMMIT_HASH}"
 
-              # Update image tags in Kubernetes YAML files
-              sed -i "s|image: lou4y/backend:.*|image: lou4y/backend:${COMMIT_HASH}|" ${K8S_YAML_PATH1}
-              sed -i "s|image: lou4y/frontend:.*|image: lou4y/frontend:${COMMIT_HASH}|" ${K8S_YAML_PATH2}
-              
-              # Commit and push changes
-              git add .
-              git commit -m "Update image tags to ${COMMIT_HASH}" || echo "No changes to commit"
-              git push
-              """
-            }
-          }
-        }
-      }
-    }
     stage('Update manage.py for Production') {
       steps {
         container('git') {
@@ -180,6 +150,36 @@ pipeline {
       }
     }
 
+    stage('Update Kubernetes YAML with New Image Tags') {
+      steps {
+        container('git') {
+          withCredentials([usernamePassword(credentialsId: env.GIT_CREDENTIALS_ID, usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
+            sh '''
+              # Clone the repository
+              git clone https://${GIT_USER}:${GIT_PASS}@github.com/nour20-maker/DeploymentFilesKhedmaSite.git
+              '''
+            script {
+              sh """
+              cd DeploymentFilesKhedmaSite
+              git config --global user.name "${GIT_USER_NAME}"
+              git config --global user.email "${GIT_USER_EMAIL}"
+              
+              # Print the current commit hash for debugging
+              echo "Commit hash: ${COMMIT_HASH}"
 
+              # Update image tags in Kubernetes YAML files
+              sed -i "s|image: lou4y/backend:.*|image: lou4y/backend:${COMMIT_HASH}|" ${K8S_YAML_PATH1}
+              sed -i "s|image: lou4y/frontend:.*|image: lou4y/frontend:${COMMIT_HASH}|" ${K8S_YAML_PATH2}
+              
+              # Commit and push changes
+              git add .
+              git commit -m "Update image tags to ${COMMIT_HASH}" || echo "No changes to commit"
+              git push
+              """
+            }
+          }
+        }
+      }
+    }
   }
 }
