@@ -92,6 +92,17 @@ pipeline {
               # Print the updated wsgi.py for debugging
               echo "Updated wsgi.py:"
               cat wsgi.py
+              cd dev_team_khedmasite/reactjs/khedma
+                  
+              # Update REACT_APP_API_URL in .env
+              sed -i "s|REACT_APP_API_URL=.*|REACT_APP_API_URL=http://46.101.142.124:30001|" .env
+                  
+              # Update REACT_APP_PUBLIC_FOLDER in .env
+              sed -i "s|REACT_APP_PUBLIC_FOLDER=.*|REACT_APP_PUBLIC_FOLDER=http://46.101.142.124:30001/media/images/|" .env
+
+              # Print the updated .env for debugging
+              echo "Updated .env:"
+              cat .env
 
 
             """
