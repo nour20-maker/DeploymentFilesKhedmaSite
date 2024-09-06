@@ -1,32 +1,37 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend
+  name: nginx-deployment
   namespace: dev
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: frontend
+      app: nginx
   template:
     metadata:
       labels:
-        app: frontend
+        app: nginx
     spec:
       containers:
-      - name: frontend
-        image: lou4y/frontend:5f7106fb1
+      - name: nginx
+        image: nginx:latest
         ports:
         - containerPort: 80
         volumeMounts:
-        - name: frontend-config
-          mountPath: /etc/frontend/conf.d
+        - name: nginx-config-volume
+          mountPath: /etc/nginx
+        - name: react-build-volume
+          mountPath: /usr/share/nginx/html  # Serve React build files from here
         - name: media-volume
-          mountPath: /django/khedma/media
+          mountPath: /var/www/react   # Media files mount
       volumes:
-      - name: frontend-config
+      - name: nginx-config-volume
         persistentVolumeClaim:
-          claimName: frontend-pvc
+          claimName: nginx-config-pvc
+      - name: react-build-volume
+        persistentVolumeClaim:
+          claimName: frontend-pvc  # Uses the PVC from the frontend pod
       - name: media-volume
         persistentVolumeClaim:
           claimName: backend-media-pvc

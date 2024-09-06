@@ -107,7 +107,7 @@ pipeline {
             timeout(time: 30, unit: 'MINUTES') {
               script {
                 def images = [
-                  /*[name: 'frontend', path: './reactjs/khedma'],*/
+                  [name: 'frontend', path: './reactjs/khedma'],
                   [name: 'backend', path: './django/khedma']
                 ]
                 images.each { image ->
@@ -132,7 +132,7 @@ pipeline {
         container('dind') {
           script {
             def images = [
-              /*[name: 'frontend'],*/
+              [name: 'frontend'],
               [name: 'backend']
             ]
             images.each { image ->
