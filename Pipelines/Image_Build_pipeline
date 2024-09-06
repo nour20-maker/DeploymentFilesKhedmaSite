@@ -39,7 +39,7 @@ pipeline {
     DOCKER_CREDENTIALS_ID = 'dockerhub' // Jenkins credentials ID for Docker Hub
     REPO_URL = 'https://github.com/nour20-maker/DeploymentFilesKhedmaSite.git' // URL of the repository to clone and modify
     K8S_YAML_PATH1 = 'Dev/backend-deployment.yaml' // Path to the Kubernetes YAML file for the backend
-    K8S_YAML_PATH2 = 'Dev/nginx-deployment.yaml'   // Path to the Kubernetes YAML file for nginx
+    K8S_YAML_PATH2 = 'Dev/frontend-deployment.yaml'   // Path to the Kubernetes YAML file for frontend
     GIT_USER_NAME = 'nour20-maker'
     GIT_USER_EMAIL = 'nourelhouda.zraibia@esprit.tn'
   }
@@ -107,7 +107,7 @@ pipeline {
             timeout(time: 30, unit: 'MINUTES') {
               script {
                 def images = [
-                  /*[name: 'nginx', path: './reactjs/khedma'],*/
+                  /*[name: 'frontend', path: './reactjs/khedma'],*/
                   [name: 'backend', path: './django/khedma']
                 ]
                 images.each { image ->
@@ -132,7 +132,7 @@ pipeline {
         container('dind') {
           script {
             def images = [
-              /*[name: 'nginx'],*/
+              /*[name: 'frontend'],*/
               [name: 'backend']
             ]
             images.each { image ->
@@ -169,7 +169,7 @@ pipeline {
 
               # Update image tags in Kubernetes YAML files
               sed -i "s|image: lou4y/backend:.*|image: lou4y/backend:${COMMIT_HASH}|" ${K8S_YAML_PATH1}
-              sed -i "s|image: lou4y/nginx:.*|image: lou4y/nginx:${COMMIT_HASH}|" ${K8S_YAML_PATH2}
+              sed -i "s|image: lou4y/frontend:.*|image: lou4y/frontend:${COMMIT_HASH}|" ${K8S_YAML_PATH2}
               
               # Commit and push changes
               git add .

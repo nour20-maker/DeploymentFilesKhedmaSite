@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx
+  name: frontend
   namespace: prod
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nginx
+      app: frontend
   template:
     metadata:
       labels:
-        app: nginx
+        app: frontend
     spec:
       containers:
-      - name: nginx
-        image: lou4y/nginx:37597714d
+      - name: frontend
+        image: lou4y/frontend:37597714d
         ports:
         - containerPort: 80

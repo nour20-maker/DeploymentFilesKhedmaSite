@@ -1,32 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx
+  name: frontend
   namespace: dev
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nginx
+      app: frontend
   template:
     metadata:
       labels:
-        app: nginx
+        app: frontend
     spec:
       containers:
-      - name: nginx
-        image: lou4y/nginx:5f7106fb1
+      - name: frontend
+        image: lou4y/frontend:5f7106fb1
         ports:
         - containerPort: 80
         volumeMounts:
-        - name: nginx-config
-          mountPath: /etc/nginx/conf.d
+        - name: frontend-config
+          mountPath: /etc/frontend/conf.d
         - name: media-volume
           mountPath: /django/khedma/media
       volumes:
-      - name: nginx-config
+      - name: frontend-config
         persistentVolumeClaim:
-          claimName: nginx-pvc
+          claimName: frontend-pvc
       - name: media-volume
         persistentVolumeClaim:
           claimName: backend-media-pvc

@@ -40,7 +40,7 @@ pipeline {
         
         
         K8S_YAML_PATH1 = 'Prod/backend-deployment.yaml'
-        K8S_YAML_PATH2 = 'Prod/nginx-deployment.yaml'
+        K8S_YAML_PATH2 = 'Prod/frontend-deployment.yaml'
     }
     stages {
         stage('Install Git and Curl') {
@@ -92,7 +92,7 @@ pipeline {
                         dir('/home/jenkins/agent/kubefiles') {
                             sh """
                             sed -i 's|image: .*|image: lou4y/backend:${env.TAG}|' ${K8S_YAML_PATH1}
-                            sed -i 's|image: .*|image: lou4y/nginx:${env.TAG}|' ${K8S_YAML_PATH2}
+                            sed -i 's|image: .*|image: lou4y/frontend:${env.TAG}|' ${K8S_YAML_PATH2}
                             git add .
                             git commit -m "Update image tag to ${env.TAG}" || echo "No changes to commit"
                             git push
