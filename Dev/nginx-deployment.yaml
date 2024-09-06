@@ -20,7 +20,7 @@ spec:
         - containerPort: 80
         volumeMounts:
         - name: nginx-config-volume
-          mountPath: /etc/nginx
+          mountPath: /etc/nginx/conf.d
         - name: react-build-volume
           mountPath: /usr/share/nginx/html  # Serve React build files from here
         - name: media-volume
