@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: lou4y/frontend:5f7106fb1
+        image: lou4y/frontend:ab982720a
         volumeMounts:
         - name: build-volume
           mountPath: /usr/src/app/build
