@@ -15,23 +15,18 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:latest
+        image: lou4y/frontend:ab982720a
         ports:
         - containerPort: 80
         volumeMounts:
         - name: nginx-config-volume
           mountPath: /etc/nginx/conf.d
-        - name: react-build-volume
-          mountPath: /usr/share/nginx/html  # Serve React build files from here
         - name: media-volume
-          mountPath: /var/www/react   # Media files mount
+          mountPath: /django/khedma/media/   # Media files mount
       volumes:
       - name: nginx-config-volume
         persistentVolumeClaim:
           claimName: nginx-config-pvc
-      - name: react-build-volume
-        persistentVolumeClaim:
-          claimName: frontend-pvc  # Uses the PVC from the frontend pod
       - name: media-volume
         persistentVolumeClaim:
           claimName: backend-media-pvc
