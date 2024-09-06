@@ -92,7 +92,7 @@ pipeline {
               # Print the updated wsgi.py for debugging
               echo "Updated wsgi.py:"
               cat wsgi.py
-               cd ../../reactjs/khedma
+               cd ../../../reactjs/khedma
                   
               # Update REACT_APP_API_URL in .env
               sed -i "s|REACT_APP_API_URL=.*|REACT_APP_API_URL=http://46.101.142.124:30001|" .env
