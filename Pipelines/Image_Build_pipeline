@@ -95,10 +95,10 @@ pipeline {
                cd ../../../reactjs/khedma
                   
               # Update REACT_APP_API_URL in .env
-              sed -i "s|REACT_APP_API_URL=.*|REACT_APP_API_URL=http://46.101.142.124:30001|" .env
+              sed -i "s|REACT_APP_API_URL=.*|REACT_APP_API_URL=http://backend|" .env
                   
               # Update REACT_APP_PUBLIC_FOLDER in .env
-              sed -i "s|REACT_APP_PUBLIC_FOLDER=.*|REACT_APP_PUBLIC_FOLDER=http://46.101.142.124:30001/media/images/|" .env
+              sed -i "s|REACT_APP_PUBLIC_FOLDER=.*|REACT_APP_PUBLIC_FOLDER=http://backend/media/images/|" .env
 
               # Print the updated .env for debugging
               echo "Updated .env:"
