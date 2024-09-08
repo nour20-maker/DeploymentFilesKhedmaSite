@@ -9,6 +9,6 @@ spec:
     app: backend
   ports:
   - protocol: TCP
-    port: 8000
-    targetPort: 8000
+    port: 80
+    targetPort: 80
     nodePort: 30001  # Choose an appropriate port in the range 30000-32767
