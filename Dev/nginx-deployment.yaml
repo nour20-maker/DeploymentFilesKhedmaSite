@@ -17,7 +17,7 @@ spec:
       - name: nginx
         image: lou4y/frontend:90b9dd4
         ports:
-        - containerPort: 8000
+        - containerPort: 80
         volumeMounts:
         - name: nginx-config-volume
           mountPath: /etc/nginx/conf.d
