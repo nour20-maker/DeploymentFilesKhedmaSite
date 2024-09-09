@@ -23,8 +23,6 @@ spec:
           mountPath: /etc/nginx/conf.d
         - name: media-volume
           mountPath: /django/khedma/media/   # Media files mount
-        - name: static-volume
-          mountPath: /usr/share/nginx/html/static
       volumes:
       - name: nginx-config-volume
         persistentVolumeClaim:
@@ -32,6 +30,4 @@ spec:
       - name: media-volume
         persistentVolumeClaim:
           claimName: backend-media-pvc
-      - name: static-volume
-        persistentVolumeClaim:
-          claimName: backend-static-pvc
+     
