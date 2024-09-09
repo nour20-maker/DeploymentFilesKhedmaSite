@@ -13,9 +13,18 @@ spec:
       labels:
         app: backend
     spec:
+      initContainers:
+      - name: init-backend
+        image: busybox
+        command: ['sh', '-c', 'cp -r /django/khedma/build/static/. /static/']
+        volumeMounts:
+        - name: static-volume
+          mountPath: /static
+        - name: temp-static
+          mountPath: /django/khedma/build/static
       containers:
       - name: backend
-        image: lou4y/backend:3fd3e155f
+        image: lou4y/backend:90b9dd4
         ports:
         - containerPort: 8000
         volumeMounts:
@@ -30,3 +39,5 @@ spec:
       - name: static-volume
         persistentVolumeClaim:
           claimName: backend-static-pvc
+      - name: temp-static
+        emptyDir: {}
