@@ -48,7 +48,7 @@ pipeline {
       steps {
         container('git') {
           withCredentials([usernamePassword(credentialsId: env.GIT_CREDENTIALS_ID, usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
-            sh 'git clone https://${GIT_USER}:${GIT_PASS}@github.com/nour20-maker/dev_team_khedmasite.git'
+            sh 'git clone https://${GIT_USER}:${GIT_PASS}@github.com/nour10-maker/dev_team_khedmasite.git'
           }
         }
       }
