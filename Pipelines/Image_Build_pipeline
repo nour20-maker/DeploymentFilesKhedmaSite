@@ -48,7 +48,7 @@ pipeline {
       steps {
         container('git') {
           withCredentials([usernamePassword(credentialsId: env.GIT_CREDENTIALS_ID, usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
-            sh 'git clone https://${GIT_USER}:${GIT_PASS}@github.com/nour10-maker/dev_team_khedmasite.git'
+            sh 'git clone https://${GIT_USER}:${GIT_PASS}@github.com/nour20-maker/testkhedma.git'
           }
         }
       }
@@ -59,7 +59,7 @@ pipeline {
         container('git') {
           script {
             // Capture the short commit hash
-            COMMIT_HASH = sh(script: 'git -C dev_team_khedmasite rev-parse --short HEAD', returnStdout: true).trim()
+            COMMIT_HASH = sh(script: 'git -C testkhedma rev-parse --short HEAD', returnStdout: true).trim()
             echo "Commit hash: ${COMMIT_HASH}"
           }
         }
@@ -71,7 +71,7 @@ pipeline {
         container('git') {
           script {
             sh """
-              cd dev_team_khedmasite/django/khedma
+              cd testkhedma_khedmasite/django/khedma
               # Update manage.py to use settings_prod
               sed -i "s|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings')|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings_prod')|" manage.py
               
@@ -118,12 +118,12 @@ pipeline {
             timeout(time: 30, unit: 'MINUTES') {
               script {
                 def images = [
-                 /* [name: 'frontend', path: './reactjs/khedma'],*/
+                  [name: 'frontend', path: './reactjs/khedma'],
                   [name: 'backend', path: './django/khedma']
                 ]
                 images.each { image ->
                   sh """
-                    cd dev_team_khedmasite/${image.path}
+                    cd testkhedma/${image.path}
                     docker build --progress=plain -t lou4y/${image.name}:${COMMIT_HASH} .
                   """
                   // Show image size
@@ -143,7 +143,7 @@ pipeline {
         container('dind') {
           script {
             def images = [
-              /*[name: 'frontend'],*/
+              [name: 'frontend'],
               [name: 'backend']
             ]
             images.each { image ->
