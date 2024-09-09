@@ -180,7 +180,7 @@ pipeline {
 
               # Update image tags in Kubernetes YAML files
               sed -i "s|image: lou4y/backend:.*|image: lou4y/backend:${COMMIT_HASH}|" ${K8S_YAML_PATH1}
-              echo "sed -i "s|image: lou4y/frontend:.*|image: lou4y/frontend:${COMMIT_HASH}|" ${K8S_YAML_PATH2}"
+              sed -i "s|image: lou4y/frontend:.*|image: lou4y/frontend:${COMMIT_HASH}|" ${K8S_YAML_PATH2}
               
               # Commit and push changes
               git add .
