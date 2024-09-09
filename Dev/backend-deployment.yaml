@@ -14,29 +14,36 @@ spec:
         app: backend
     spec:
       initContainers:
-      - name: init-backend
+      - name: init-copy-static
         image: busybox
-        command: ['sh', '-c', 'cp -r /django/khedma/build/static/. /static/']
+        command: ['sh', '-c', 'cp -r /new-repo/static/. /shared-static/']
         volumeMounts:
-        - name: static-volume
-          mountPath: /static
+        - name: shared-static-volume
+          mountPath: /shared-static/
         - name: temp-static
-          mountPath: /django/khedma/build/static
+          mountPath: /new-repo/static
       containers:
       - name: backend
         image: lou4y/backend:90b9dd4
         ports:
         - containerPort: 8000
+        env:
+        - name: DJANGO_SETTINGS_MODULE
+          value: "khedma.settings_prod"
         volumeMounts:
         - name: media-volume
           mountPath: /django/khedma/media
-        - name: static-volume
-          mountPath: /django/khedma/build/static
+        - name: shared-static-volume
+          mountPath: /django/khedma/static
+        lifecycle:
+          postStart:
+            exec:
+              command: ['sh', '-c', 'cp -r /shared-static/. /django/khedma/static/']
       volumes:
       - name: media-volume
         persistentVolumeClaim:
           claimName: backend-media-pvc
-      - name: static-volume
+      - name: shared-static-volume
         persistentVolumeClaim:
           claimName: backend-static-pvc
       - name: temp-static
