@@ -71,7 +71,7 @@ pipeline {
         container('git') {
           script {
             sh """
-              cd testkhedma_khedmasite/django/khedma
+              cd testkhedma/django/khedma
               # Update manage.py to use settings_prod
               sed -i "s|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings')|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings_prod')|" manage.py
               
