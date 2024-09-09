@@ -48,7 +48,7 @@ pipeline {
       steps {
         container('git') {
           withCredentials([usernamePassword(credentialsId: env.GIT_CREDENTIALS_ID, usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
-            sh 'git clone https://${GIT_USER}:${GIT_PASS}@github.com/nour20-maker/testkhedma.git'
+            sh 'git clone https://${GIT_USER}:${GIT_PASS}@github.com/nour20-maker/dev_team_khedmasite.git'
           }
         }
       }
@@ -59,7 +59,7 @@ pipeline {
         container('git') {
           script {
             // Capture the short commit hash
-            COMMIT_HASH = sh(script: 'git -C testkhedma rev-parse --short HEAD', returnStdout: true).trim()
+            COMMIT_HASH = sh(script: 'git -C dev_team_khedmasite rev-parse --short HEAD', returnStdout: true).trim()
             echo "Commit hash: ${COMMIT_HASH}"
           }
         }
@@ -71,7 +71,7 @@ pipeline {
         container('git') {
           script {
             sh """
-              cd testkhedma/django/khedma
+              cd dev_team_khedmasite/django/khedma
               # Update manage.py to use settings_prod
               sed -i "s|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings')|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings_prod')|" manage.py
               
@@ -92,17 +92,17 @@ pipeline {
               # Print the updated wsgi.py for debugging
               echo "Updated wsgi.py:"
               cat wsgi.py
-              #cd ../../../reactjs/khedma
+              cd ../../../reactjs/khedma
                   
               # Update REACT_APP_API_URL in .env
-              #sed -i "s|REACT_APP_API_URL=.*|REACT_APP_API_URL=http://backend|" .env
+              sed -i "s|REACT_APP_API_URL=.*|REACT_APP_API_URL=http://46.101.124.182:30000/|" .env
                   
               # Update REACT_APP_PUBLIC_FOLDER in .env
-              # sed -i "s|REACT_APP_PUBLIC_FOLDER=.*|REACT_APP_PUBLIC_FOLDER=http://backend/media/images/|" .env
+              sed -i "s|REACT_APP_PUBLIC_FOLDER=.*|REACT_APP_PUBLIC_FOLDER=http://46.101.124.182:30000/media/images/|" .env
 
               # Print the updated .env for debugging
-              # echo "Updated .env:"
-              # cat .env
+              echo "Updated .env:"
+              cat .env
 
 
             """
@@ -123,7 +123,7 @@ pipeline {
                 ]
                 images.each { image ->
                   sh """
-                    cd testkhedma/${image.path}
+                    cd dev_team_khedmasite/${image.path}
                     docker build --progress=plain -t lou4y/${image.name}:${COMMIT_HASH} .
                   """
                   // Show image size
