@@ -21,12 +21,7 @@ spec:
         volumeMounts:
         - name: media-volume
           mountPath: /django/khedma/media
-        - name: static-volume
-          mountPath: /django/khedma/build/static
       volumes:
       - name: media-volume
         persistentVolumeClaim:
           claimName: backend-media-pvc
-      - name: static-volume
-        persistentVolumeClaim:
-          claimName: backend-static-pvc
