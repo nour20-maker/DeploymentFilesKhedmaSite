@@ -18,6 +18,9 @@ spec:
         image: lou4y/frontend:374af8d
         ports:
         - containerPort: 80
+        env:
+        - name: REACT_APP_API_URL
+          value: "http://46.101.124.182:30001"
         volumeMounts:
         - name: nginx-config-volume
           mountPath: /etc/nginx/conf.d
@@ -30,4 +33,3 @@ spec:
       - name: media-volume
         persistentVolumeClaim:
           claimName: backend-media-pvc
-     
