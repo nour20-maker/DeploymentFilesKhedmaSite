@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: lou4y/backend:a635333
+        image: lou4y/backend:374af8d
         ports:
         - containerPort: 8000
         volumeMounts:
