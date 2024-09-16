@@ -101,7 +101,7 @@ pipeline {
                         sed -i "s|REACT_APP_IMAGE_URL=.*|REACT_APP_IMAGE_URL='http://46.101.124.182:30010'|" .env
                         
                         echo " Update DJANGO_APP_IMAGE_URL in .env "
-                        sed -i "s|DJANGO_APP_IMAGE_URL=.*|DJANGO_APP_IMAGE_URL='http://46.101.124.182:30011'|" .env
+                        sed -i "s|REACT_APP_DJANGO_IMAGE_URL=.*|REACT_APP_DJANGO_IMAGE_URL='http://46.101.124.182:30011'|" .env
                         
                         echo " Print the updated .env for debugging "
                         echo "Updated .env:"
