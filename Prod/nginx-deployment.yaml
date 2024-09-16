@@ -21,7 +21,6 @@ spec:
         volumeMounts:
         - name: nginx-config-volume
           mountPath: /etc/nginx/conf.d
-          subPath: nginx.conf
         - name: media-volume
           mountPath: /django/khedma/media/
       volumes:
