@@ -179,8 +179,8 @@ pipeline {
                     script {
                         sh """
                         cd DeploymentFilesKhedmaSite
-                        sed -i 's|image: .*|image: lou4y/backend-prod:${env.TAG}|' ${K8S_YAML_PATH1}
-                        sed -i 's|image: .*|image: lou4y/frontend-prod:${env.TAG}|' ${K8S_YAML_PATH2}
+                        sed -i 's|image: .*|image: lou4y/prod-backend:${env.TAG}|' ${K8S_YAML_PATH1}
+                        sed -i 's|image: .*|image: lou4y/prod-frontend:${env.TAG}|' ${K8S_YAML_PATH2}
                         git add .
                         git commit -m "Update image tag to ${env.TAG}" || echo "No changes to commit"
                         git push
