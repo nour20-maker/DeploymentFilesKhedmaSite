@@ -5,32 +5,32 @@ pipeline {
             apiVersion: v1
             kind: Pod
             spec:
-                containers:
-                - name: git
-                  image: alpine/git
-                  command:
-                  - cat
-                  tty: true
-                - name: dind
-                  image: docker:24.0.2-dind
-                  securityContext:
-                    privileged: true
-                  env:
-                    - name: DOCKER_TLS_CERTDIR
-                      value: ""
-                  resources:
-                    limits:
-                      memory: "4Gi"
-                      cpu: "300m"
-                    requests:
-                      memory: "2Gi"
-                      cpu: "200m"
-                  volumeMounts:
-                   - mountPath: /var/lib/docker-prod
-                     name: docker-graph-storage
-            volumes:
-            - name: docker-graph-storage
-              emptyDir: {}
+              containers:
+              - name: git
+                image: alpine/git
+                command:
+                - cat
+                tty: true
+              - name: dind
+                image: docker:24.0.2-dind
+                securityContext:
+                  privileged: true
+                env:
+                  - name: DOCKER_TLS_CERTDIR
+                    value: ""
+                resources:
+                  limits:
+                    memory: "4Gi"
+                    cpu: "300m"
+                  requests:
+                    memory: "2Gi"
+                    cpu: "200m"
+                volumeMounts:
+                 - mountPath: /var/lib/docker
+                   name: docker-graph-storage
+              volumes:
+              - name: docker-graph-storage
+                emptyDir: {}
             '''
         }
     }
@@ -90,20 +90,20 @@ pipeline {
                         cat wsgi.py
 
                         cd ../../../reactjs/khedma
-                        
-                        echo "Update REACT_APP_API_URL in .env"
+                      
+                        echo " Update REACT_APP_API_URL in .env"
                         sed -i "s|REACT_APP_API_URL=.*|REACT_APP_API_URL=http://46.101.124.182:30011|" .env
                         
-                        echo "Update REACT_APP_PUBLIC_FOLDER in .env"
+                        echo " Update REACT_APP_PUBLIC_FOLDER in .env"
                         sed -i "s|REACT_APP_PUBLIC_FOLDER=.*|REACT_APP_PUBLIC_FOLDER=http://46.101.124.182:30010/media/images/|" .env
 
-                        echo "Update REACT_APP_IMAGE_URL in .env"
+                        echo " Update REACT_APP_IMAGE_URL in .env "
                         sed -i "s|REACT_APP_IMAGE_URL=.*|REACT_APP_IMAGE_URL=http://46.101.124.182:30010|" .env
                         
-                        echo "Update DJANGO_APP_IMAGE_URL in .env"
+                        echo " Update DJANGO_APP_IMAGE_URL in .env "
                         sed -i "s|DJANGO_APP_IMAGE_URL=.*|DJANGO_APP_IMAGE_URL=http://46.101.124.182:30011|" .env
                         
-                        echo "Print the updated .env for debugging"
+                        echo " Print the updated .env for debugging "
                         echo "Updated .env:"
                         cat .env
                         """
@@ -118,17 +118,17 @@ pipeline {
                         timeout(time: 30, unit: 'MINUTES') {
                             script {
                                 def images = [
-                                    [name: 'prod-frontend', path: './reactjs/khedma']/*,
-                                    [name: 'prod-backend', path: './django/khedma']*/
+                                    [name: 'prod-frontend', path: './reactjs/khedma']
+                                    /*, [name: 'prod-backend', path: './django/khedma']*/
                                 ]
                                 images.each { image ->
                                     sh """
-                                    cd KhedmaSiteDeployKubernetes/${image.path}
-                                    docker build --progress=plain -t lou4y/${image.name}:${COMMIT_HASH} .
+                                        cd KhedmaSiteDeployKubernetes/${image.path}
+                                        docker build --progress=plain -t lou4y/${image.name}:${COMMIT_HASH} .
                                     """
                                     // Show image size
                                     sh """
-                                    docker images lou4y/${image.name}:${COMMIT_HASH} --format "{{.Repository}}:{{.Tag}} - {{.Size}}"
+                                        docker images lou4y/${image.name}:${COMMIT_HASH} --format "{{.Repository}}:{{.Tag}} - {{.Size}}"
                                     """
                                 }
                             }
@@ -142,15 +142,15 @@ pipeline {
                 container('dind') {
                     script {
                         def images = [
-                            [name: 'prod-frontend']/*,
-                            [name: 'prod-backend']*/
+                            [name: 'prod-frontend']
+                            /*, [name: 'prod-backend']*/
                         ]
                         images.each { image ->
                             retry(3) {
                                 withCredentials([usernamePassword(credentialsId: env.DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                                     sh """
-                                    docker login -u $DOCKER_USER -p $DOCKER_PASS
-                                    docker push lou4y/${image.name}:${COMMIT_HASH}
+                                        docker login -u $DOCKER_USER -p $DOCKER_PASS
+                                        docker push lou4y/${image.name}:${COMMIT_HASH}
                                     """
                                 }
                             }
