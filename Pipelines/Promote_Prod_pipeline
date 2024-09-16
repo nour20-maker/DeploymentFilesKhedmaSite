@@ -119,7 +119,7 @@ pipeline {
                             script {
                                 def images = [
                                     [name: 'prod-frontend', path: './reactjs/khedma']
-                                    /*, [name: 'prod-backend', path: './django/khedma']*/
+                                    , [name: 'prod-backend', path: './django/khedma']
                                 ]
                                 images.each { image ->
                                     sh """
@@ -143,7 +143,7 @@ pipeline {
                     script {
                         def images = [
                             [name: 'prod-frontend']
-                            /*, [name: 'prod-backend']*/
+                            , [name: 'prod-backend']
                         ]
                         images.each { image ->
                             retry(3) {
