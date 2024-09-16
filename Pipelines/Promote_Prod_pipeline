@@ -27,9 +27,9 @@ pipeline {
                     cpu: "200m"
                 volumeMounts:
                  - mountPath: /var/lib/docker
-                   name: docker-graph-storage
+                   name: docker-storage
               volumes:
-              - name: docker-graph-storage
+              - name: docker-storage
                 emptyDir: {}
             '''
         }
