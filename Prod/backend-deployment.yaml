@@ -24,4 +24,4 @@ spec:
       volumes:
       - name: media-volume
         persistentVolumeClaim:
-          claimName: backend-media-pvc
+          claimName: prod-backend-media-pv
