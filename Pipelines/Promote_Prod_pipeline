@@ -88,12 +88,7 @@ pipeline {
                         sed -i "s|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings')|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings_prod')|" wsgi.py
                         echo "Updated wsgi.py:"
                         cat wsgi.py
-                        cd ../users
-                        echo "Updated views.py:"
-                        echo "Updated views.py:"
-                        sed -i "s|activation_url = f\"http://{current_site}/activate/{uid}/{token}\"|activation_url = f\"http://46.101.124.182:30010//activate/{uid}/{token}\"|" views.py
-                        echo "Updated views.py:"
-                        cat views.py
+                
                         cd ../../../reactjs/khedma
                       
                         echo " Update REACT_APP_API_URL in .env"
