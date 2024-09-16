@@ -1,37 +1,37 @@
 pipeline {
     agent {
         kubernetes {
-            yaml '''
-            apiVersion: v1
-            kind: Pod
-            spec:
-              containers:
-              - name: git
-                image: alpine/git
-                command:
-                - cat
-                tty: true
-              - name: dind
-                image: docker:24.0.2-dind
-                securityContext:
-                  privileged: true
-                env:
-                  - name: DOCKER_TLS_CERTDIR
-                    value: ""
-                resources:
-                  limits:
-                    memory: "4Gi"
-                    cpu: "300m"
-                  requests:
-                    memory: "2Gi"
-                    cpu: "200m"
-                volumeMounts:
-                 - mountPath: /var/lib/docker
-                   name: docker-storage
-              volumes:
-              - name: docker-storage
-                emptyDir: {}
-            '''
+      yaml '''
+      apiVersion: v1
+      kind: Pod
+      spec:
+        containers:
+        - name: git
+          image: alpine/git
+          command:
+          - cat
+          tty: true
+        - name: dind
+          image: docker:24.0.2-dind
+          securityContext:
+            privileged: true
+          env:
+            - name: DOCKER_TLS_CERTDIR
+              value: ""
+          resources:
+            limits:
+              memory: "4Gi"
+              cpu: "300m"
+            requests:
+              memory: "2Gi"
+              cpu: "200m"
+          volumeMounts:
+           - mountPath: /var/lib/docker
+             name: docker-graph-storage
+        volumes:
+        - name: docker-graph-storage
+          emptyDir: {}
+      '''
         }
     }
     environment {
@@ -41,7 +41,7 @@ pipeline {
         GITHUB_TOKEN = credentials('github')
         DOCKER_CREDENTIALS_ID = 'dockerhub'
         K8S_YAML_PATH1 = 'Prod/backend-deployment.yaml'
-        K8S_YAML_PATH2 = 'Prod/frontend-deployment.yaml'
+        K8S_YAML_PATH2 = 'Prod/nginx-deployment.yaml'
     }
     stages {
         stage('Checkout Repository') {
@@ -80,7 +80,7 @@ pipeline {
                         sed -i "s|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings')|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings_prod')|" manage.py
                         echo "Updated manage.py:"
                         cat manage.py
-                        
+                        cd khedma
                         sed -i "s|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings')|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings_prod')|" asgi.py
                         echo "Updated asgi.py:"
                         cat asgi.py
@@ -128,7 +128,7 @@ pipeline {
                                     """
                                     // Show image size
                                     sh """
-                                        docker images lou4y/${image.name}:${COMMIT_HASH} --format "{{.Repository}}:{{.Tag}} - {{.Size}}"
+                                       docker images lou4y/${image.name}:${COMMIT_HASH} --format "{{.Repository}}:{{.Tag}} - {{.Size}}"
                                     """
                                 }
                             }
@@ -165,6 +165,7 @@ pipeline {
                     script {
                         env.TAG = sh(script: 'git -C KhedmaSiteDeployKubernetes rev-parse --short HEAD', returnStdout: true).trim()
                         sh """
+                        cd KhedmaSiteDeployKubernetes
                         git tag -a ${env.TAG} -m "Release for commit ${env.TAG}"
                         git push --tags
                         """
