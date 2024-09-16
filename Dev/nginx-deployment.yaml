@@ -15,9 +15,20 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: lou4y/frontend:4d8d805
+        image: lou4y/frontend:2a8d3ea
         ports:
         - containerPort: 80
+        env:
+        - name: REACT_APP_API_URL
+          value: "http://46.101.124.182:30001"  # Replace with your desired value or use ConfigMap/Secret
+        - name: REACT_APP_PUBLIC_FOLDER
+          value: "http://46.101.124.182:30000/media/"  # Replace with your desired value or use ConfigMap/Secret
+        - name: NODE_ENV
+          value: "prod"  # Replace with your desired value or use ConfigMap/Secret
+        - name: REACT_APP_IMAGE_URL
+          value: "http://46.101.124.182:30000"  # Replace with your desired value or use ConfigMap/Secret
+        - name: DJANGO_APP_IMAGE_URL
+          value: "http://46.101.124.182:30001"  # Replace with your desired value or use ConfigMap/Secret
         volumeMounts:
         - name: nginx-config-volume
           mountPath: /etc/nginx/conf.d
@@ -30,4 +41,3 @@ spec:
       - name: media-volume
         persistentVolumeClaim:
           claimName: backend-media-pvc
-     
