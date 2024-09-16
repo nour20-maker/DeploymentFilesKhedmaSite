@@ -26,7 +26,7 @@ pipeline {
                       memory: "2Gi"
                       cpu: "200m"
                   volumeMounts:
-                   - mountPath: /var/lib/docker
+                   - mountPath: /var/lib/docker-prod
                      name: docker-graph-storage
             volumes:
             - name: docker-graph-storage
