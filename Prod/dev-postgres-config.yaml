@@ -6,4 +6,4 @@ metadata:
 data:
   POSTGRES_DB: postgres
   POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: prodpassword  # Replace with your actual password
+  POSTGRES_PASSWORD: postgres  # Replace with your actual password
