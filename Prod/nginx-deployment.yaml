@@ -18,11 +18,14 @@ spec:
         image: lou4y/prod-frontend:2975a0d
         ports:
         - containerPort: 80
+        - containerPort: 443  # Add HTTPS port
         volumeMounts:
         - name: nginx-config-volume
           mountPath: /etc/nginx/conf.d
         - name: media-volume
           mountPath: /django/khedma/media/
+        - name: nginx-tls  # Mount the TLS certificate
+          mountPath: /etc/nginx/tls  # Change path as necessary
       volumes:
       - name: nginx-config-volume
         configMap:
@@ -30,3 +33,6 @@ spec:
       - name: media-volume
         persistentVolumeClaim:
           claimName: prod-backend-media-pvc
+      - name: nginx-tls  # Reference the secret
+        secret:
+          secretName: nginx-tls  # This should match the secret name from the Certificate
