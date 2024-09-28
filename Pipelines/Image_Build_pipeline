@@ -86,25 +86,22 @@ pipeline {
       
               cd ../../../reactjs/khedma
                           
-              # Set service names
-              BACKEND_SERVICE="backend"
-              NGINX_SERVICE="nginx"
-              
+              # Set service names              
               # Update REACT_APP_API_URL to point to the backend service
               echo " Update REACT_APP_API_URL in .env"
-              sed -i "s|REACT_APP_API_URL=.*|REACT_APP_API_URL=http://$BACKEND_SERVICE:8000|" .env
+              sed -i "s|REACT_APP_API_URL=.*|REACT_APP_API_URL=http://backend:8000|" .env
               
               # Update REACT_APP_PUBLIC_FOLDER to point to Nginx service for public assets
               echo " Update REACT_APP_PUBLIC_FOLDER in .env"
-              sed -i "s|REACT_APP_PUBLIC_FOLDER=.*|REACT_APP_PUBLIC_FOLDER='http://$NGINX_SERVICE/media/images/'|" .env
+              sed -i "s|REACT_APP_PUBLIC_FOLDER=.*|REACT_APP_PUBLIC_FOLDER='http://nginx/media/images/'|" .env
               
               # Update REACT_APP_IMAGE_URL to point to Nginx service for images
               echo " Update REACT_APP_IMAGE_URL in .env "
-              sed -i "s|REACT_APP_IMAGE_URL=.*|REACT_APP_IMAGE_URL='http://$NGINX_SERVICE'|" .env
+              sed -i "s|REACT_APP_IMAGE_URL=.*|REACT_APP_IMAGE_URL='http://nginx'|" .env
               
               # Update DJANGO_APP_IMAGE_URL to point to the backend service
               echo " Update DJANGO_APP_IMAGE_URL in .env "
-              sed -i "s|REACT_APP_DJANGO_IMAGE_URL=.*|REACT_APP_DJANGO_IMAGE_URL='http://$BACKEND_SERVICE:8000'|" .env
+              sed -i "s|REACT_APP_DJANGO_IMAGE_URL=.*|REACT_APP_DJANGO_IMAGE_URL='http://backend:8000'|" .env
               
               # Print the updated .env for debugging
               echo " Print the updated .env for debugging "
