@@ -59,7 +59,7 @@ pipeline {
         container('git') {
           script {
             // Capture the short commit hash
-            COMMIT_HASH = sh(script: 'git -C testkhedma rev-parse --short HEAD', returnStdout: true).trim()
+            COMMIT_HASH = sh(script: 'git -C KhedmaSiteDeployKubernetes rev-parse --short HEAD', returnStdout: true).trim()
             echo "Commit hash: ${COMMIT_HASH}"
           }
         }
@@ -71,40 +71,42 @@ pipeline {
         container('git') {
           script {
             sh """
-              cd testkhedma/django/khedma
-              # Update manage.py to use settings_prod
+              cd KhedmaSiteDeployKubernetes/django/khedma
               sed -i "s|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings')|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings_prod')|" manage.py
-              
-              # Print the updated manage.py for debugging
               echo "Updated manage.py:"
               cat manage.py
               cd khedma
-              # Update wsgi.py to settings_prod 
               sed -i "s|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings')|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings_prod')|" asgi.py
-              # Print the updated asgi.py for debugging
               echo "Updated asgi.py:"
               cat asgi.py
-          
               
-              # Update wsgi.py to use settings_prod
               sed -i "s|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings')|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings_prod')|" wsgi.py
-              
-              # Print the updated wsgi.py for debugging
               echo "Updated wsgi.py:"
               cat wsgi.py
-              #cd ../../../reactjs/khedma
-                  
-              # Update REACT_APP_API_URL in .env
-              #sed -i "s|REACT_APP_API_URL=.*|REACT_APP_API_URL=http://46.101.124.182:30001|" .env
-                  
-              # Update REACT_APP_PUBLIC_FOLDER in .env
-              #sed -i "s|REACT_APP_PUBLIC_FOLDER=.*|REACT_APP_PUBLIC_FOLDER=http://46.101.124.182:30000/media/images/|" .env
-
+      
+              cd ../../../reactjs/khedma
+                          
+              # Set service names              
+              # Update REACT_APP_API_URL to point to the backend service
+              echo " Update REACT_APP_API_URL in .env"
+              sed -i "s|REACT_APP_API_URL=.*|REACT_APP_API_URL=http://backend:8000|" .env
+              
+              # Update REACT_APP_PUBLIC_FOLDER to point to Nginx service for public assets
+              echo " Update REACT_APP_PUBLIC_FOLDER in .env"
+              sed -i "s|REACT_APP_PUBLIC_FOLDER=.*|REACT_APP_PUBLIC_FOLDER='http://nginx/media/images/'|" .env
+              
+              # Update REACT_APP_IMAGE_URL to point to Nginx service for images
+              echo " Update REACT_APP_IMAGE_URL in .env "
+              sed -i "s|REACT_APP_IMAGE_URL=.*|REACT_APP_IMAGE_URL='http://nginx'|" .env
+              
+              # Update DJANGO_APP_IMAGE_URL to point to the backend service
+              echo " Update DJANGO_APP_IMAGE_URL in .env "
+              sed -i "s|REACT_APP_DJANGO_IMAGE_URL=.*|REACT_APP_DJANGO_IMAGE_URL='http://backend:8000'|" .env
+              
               # Print the updated .env for debugging
-              #echo "Updated .env:"
-              #cat .env
-
-
+              echo " Print the updated .env for debugging "
+              echo "Updated .env:"
+              cat .env
             """
           }
         }
@@ -123,7 +125,7 @@ pipeline {
                 ]
                 images.each { image ->
                   sh """
-                    cd testkhedma/${image.path}
+                    cd KhedmaSiteDeployKubernetes/${image.path}
                     docker build --progress=plain -t lou4y/${image.name}:${COMMIT_HASH} .
                   """
                   // Show image size

@@ -88,20 +88,20 @@ pipeline {
                         sed -i "s|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings')|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings_prod')|" wsgi.py
                         echo "Updated wsgi.py:"
                         cat wsgi.py
-
+                
                         cd ../../../reactjs/khedma
                       
                         echo " Update REACT_APP_API_URL in .env"
                         sed -i "s|REACT_APP_API_URL=.*|REACT_APP_API_URL=http://46.101.124.182:30011|" .env
                         
                         echo " Update REACT_APP_PUBLIC_FOLDER in .env"
-                        sed -i "s|REACT_APP_PUBLIC_FOLDER=.*|REACT_APP_PUBLIC_FOLDER=http://46.101.124.182:30010/media/images/|" .env
+                        sed -i "s|REACT_APP_PUBLIC_FOLDER=.*|REACT_APP_PUBLIC_FOLDER='http://46.101.124.182:30010/media/images/'|" .env
 
                         echo " Update REACT_APP_IMAGE_URL in .env "
-                        sed -i "s|REACT_APP_IMAGE_URL=.*|REACT_APP_IMAGE_URL=http://46.101.124.182:30010|" .env
+                        sed -i "s|REACT_APP_IMAGE_URL=.*|REACT_APP_IMAGE_URL='http://46.101.124.182:30010'|" .env
                         
                         echo " Update DJANGO_APP_IMAGE_URL in .env "
-                        sed -i "s|DJANGO_APP_IMAGE_URL=.*|DJANGO_APP_IMAGE_URL=http://46.101.124.182:30011|" .env
+                        sed -i "s|REACT_APP_DJANGO_IMAGE_URL=.*|REACT_APP_DJANGO_IMAGE_URL='http://46.101.124.182:30011'|" .env
                         
                         echo " Print the updated .env for debugging "
                         echo "Updated .env:"
@@ -179,8 +179,8 @@ pipeline {
                     script {
                         sh """
                         cd DeploymentFilesKhedmaSite
-                        sed -i 's|image: .*|image: lou4y/backend-prod:${env.TAG}|' ${K8S_YAML_PATH1}
-                        sed -i 's|image: .*|image: lou4y/frontend-prod:${env.TAG}|' ${K8S_YAML_PATH2}
+                        sed -i 's|image: .*|image: lou4y/prod-backend:${env.TAG}|' ${K8S_YAML_PATH1}
+                        sed -i 's|image: .*|image: lou4y/prod-frontend:${env.TAG}|' ${K8S_YAML_PATH2}
                         git add .
                         git commit -m "Update image tag to ${env.TAG}" || echo "No changes to commit"
                         git push
