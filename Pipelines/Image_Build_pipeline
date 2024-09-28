@@ -59,7 +59,7 @@ pipeline {
         container('git') {
           script {
             // Capture the short commit hash
-            COMMIT_HASH = sh(script: 'git -C testkhedma rev-parse --short HEAD', returnStdout: true).trim()
+            COMMIT_HASH = sh(script: 'git -C KhedmaSiteDeployKubernetes rev-parse --short HEAD', returnStdout: true).trim()
             echo "Commit hash: ${COMMIT_HASH}"
           }
         }
@@ -128,7 +128,7 @@ pipeline {
                 ]
                 images.each { image ->
                   sh """
-                    cd testkhedma/${image.path}
+                    cd KhedmaSiteDeployKubernetes/${image.path}
                     docker build --progress=plain -t lou4y/${image.name}:${COMMIT_HASH} .
                   """
                   // Show image size
