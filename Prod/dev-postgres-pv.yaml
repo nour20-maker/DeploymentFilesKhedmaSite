@@ -9,7 +9,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   capacity:
-    storage: 10Gi
+    storage: 5Gi
   hostPath:  # Use hostPath for local storage (ensure this matches your storage setup)
     path: /mnt/data/prod_postgres
   storageClassName: ""  # An empty storageClassName means it won't use any default StorageClass
@@ -26,5 +26,5 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 10Gi
+      storage: 5Gi
   storageClassName: ""  # Make sure this matches the PersistentVolume's storageClassName
