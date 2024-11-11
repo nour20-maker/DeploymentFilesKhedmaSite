@@ -124,11 +124,11 @@ pipeline {
                                 images.each { image ->
                                     sh """
                                         cd KhedmaSiteDeployKubernetes/${image.path}
-                                        docker build --progress=plain -t lou4y/${image.name}:${COMMIT_HASH} .
+                                        docker build --progress=plain -t nourzraibia/${image.name}:${COMMIT_HASH} .
                                     """
                                     // Show image size
                                     sh """
-                                       docker images lou4y/${image.name}:${COMMIT_HASH} --format "{{.Repository}}:{{.Tag}} - {{.Size}}"
+                                       docker images nourzraibia/${image.name}:${COMMIT_HASH} --format "{{.Repository}}:{{.Tag}} - {{.Size}}"
                                     """
                                 }
                             }
@@ -150,7 +150,7 @@ pipeline {
                                 withCredentials([usernamePassword(credentialsId: env.DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                                     sh """
                                         docker login -u $DOCKER_USER -p $DOCKER_PASS
-                                        docker push lou4y/${image.name}:${COMMIT_HASH}
+                                        docker push nourzraibia/${image.name}:${COMMIT_HASH}
                                     """
                                 }
                             }
@@ -179,8 +179,8 @@ pipeline {
                     script {
                         sh """
                         cd DeploymentFilesKhedmaSite
-                        sed -i 's|image: .*|image: lou4y/prod-backend:${env.TAG}|' ${K8S_YAML_PATH1}
-                        sed -i 's|image: .*|image: lou4y/prod-frontend:${env.TAG}|' ${K8S_YAML_PATH2}
+                        sed -i 's|image: .*|image: nourzraibia/prod-backend:${env.TAG}|' ${K8S_YAML_PATH1}
+                        sed -i 's|image: .*|image: nourzraibia/prod-frontend:${env.TAG}|' ${K8S_YAML_PATH2}
                         git add .
                         git commit -m "Update image tag to ${env.TAG}" || echo "No changes to commit"
                         git push
