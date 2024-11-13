@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: api-ingress
+  name: backend-ingress
   namespace: production
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
@@ -10,7 +10,7 @@ spec:
   tls:
     - hosts:
         - khedma123456.ddns.net
-      secretName: khedma-api-tls
+      secretName: backend-tls-secret
   rules:
     - host: khedma123456.ddns.net
       http:
