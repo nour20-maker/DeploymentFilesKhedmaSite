@@ -4,7 +4,7 @@ metadata:
   name: nginx-deployment
   namespace: production
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: nginx
@@ -15,13 +15,18 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:latest
+        image: lou4y/khedma-site:latest
         ports:
         - containerPort: 80
         volumeMounts:
         - name: nginx-config-volume
           mountPath: /etc/nginx/conf.d
+        - name: media-volume
+          mountPath: /django/khedma/media/
       volumes:
       - name: nginx-config-volume
         configMap:
           name: nginx-config
+      - name: media-volume
+        persistentVolumeClaim:
+          claimName: production-backend-media-pvc
