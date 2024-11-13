@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend-deployment
+  name: backend
   namespace: production
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: backend
@@ -17,21 +17,11 @@ spec:
       - name: backend
         image: lou4y/prod-backend:2975a0d
         ports:
-        - containerPort: 8080
-        envFrom:
-        - secretRef:
-            name: postgres-secret  # Use the Secret for database credentials
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: backend-service
-  namespace: production
-spec:
-  selector:
-    app: backend
-  ports:
-    - protocol: TCP
-      port: 8080
-      targetPort: 8080
-  type: ClusterIP  # Expose internally to be used by Nginx
+        - containerPort: 8000
+        volumeMounts:
+        - name: media-volume
+          mountPath: /django/khedma/media
+      volumes:
+      - name: media-volume
+        persistentVolumeClaim:
+          claimName: prod-backend-media-pvc
