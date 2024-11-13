@@ -31,4 +31,4 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 80
-  type: ClusterIP  # Expose internally to be used by Nginx
+  type: ClusterIP
