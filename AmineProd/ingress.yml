@@ -23,10 +23,10 @@ spec:
             name: nginx-service
             port:
               number: 80
-  - host: www.khedma.site
+  - host: khedma123456.ddns.net
     http:
       paths:
-      - path: /
+      - path: /api/
         pathType: Prefix
         backend:
           service:
