@@ -9,28 +9,24 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   tls:
-  - hosts:
-      - khedma123456.ddns.net
-    secretName: khedma-site-tls  # Cert-Manager will create this secret
+    - hosts:
+        - khedma123456.ddns.net
+      secretName: khedma-site-tls
   rules:
-  - host: khedma123456.ddns.net
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: nginx-service
-            port:
-              number: 80
-  - host: khedma123456.ddns.net
-    http:
-      paths:
-      # - path: /api/
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: nginx-service
-            port:
-              number: 80
+    - host: khedma123456.ddns.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend-service
+                port:
+                  number: 80
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-service
+                port:
+                  number: 8000
