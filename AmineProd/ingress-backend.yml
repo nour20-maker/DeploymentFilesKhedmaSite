@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: backend-ingress
+  namespace: prod
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /api
+spec:
+  rules:
+  - host: khedma123456.ddns.net  # Use your actual domain
+    http:
+      paths:
+      - path: /api/
+        pathType: Prefix
+        backend:
+          service:
+            name: backend-service
+            port:
+              number: 8000  # Port where your backend is running
+  tls:
+  - hosts:
+    - khedma123456.ddns.net
+    secretName: khedma-tls-secret
