@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: postgresql
-        image: postgres:13  # You can replace with a custom image if needed
+        image: postgres:15.3-alpine
         env:
         - name: POSTGRES_USER
           valueFrom:
