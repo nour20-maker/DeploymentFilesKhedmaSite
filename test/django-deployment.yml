@@ -14,18 +14,17 @@ spec:
         app: khedma-backend
     spec:
       containers:
-      - name: backend
-        image: mohamedamineblibech:v1.1
-        command: ["gunicorn", "khedma.wsgi", "--bind", "0.0.0.0:8000"]
-        ports:
-        - containerPort: 8000
-        env:
-        - name: DATABASE_URL
-          value: "postgresql://postgres:postgres@postgres.presprod.svc.cluster.local:5432/postgres"
-        volumeMounts:
-        - name: media-storage
-          mountPath: /django/khedma/media
+        - name: backend
+          image: mohamedamineblibech:v1.1
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DATABASE_URL
+              value: "postgresql://postgres:postgres@postgres.presprod.svc.cluster.local:5432/postgres"
+          volumeMounts:
+            - name: media-storage
+              mountPath: /django/khedma/media
       volumes:
-      - name: media-storage
-        persistentVolumeClaim:
-          claimName: media-pvc
+        - name: media-storage
+          persistentVolumeClaim:
+            claimName: media-pvc
