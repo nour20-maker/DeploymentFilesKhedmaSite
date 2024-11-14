@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: khedma-backend-ingress
+  namespace: presprod
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"  # Adjust if using a different issuer
+spec:
+  tls:
+  - hosts:
+      - khedma123456.ddns.net  # Replace with your actual domain
+    secretName: khedma-tls  # Cert-Manager will create this secret with the SSL certificate
+  rules:
+  - host: khedma.site  # Replace with your actual domain
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: backend-service
+            port:
+              number: 443
