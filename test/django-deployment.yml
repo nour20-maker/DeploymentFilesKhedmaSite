@@ -15,12 +15,24 @@ spec:
     spec:
       containers:
         - name: backend
-          image: mohamedamineblibech:v1.1
+          image: mohamedamineblibech:v1.1  # Make sure this image is built and pushed to a registry
           ports:
             - containerPort: 8000
           env:
             - name: DATABASE_URL
-              value: "postgresql://postgres:postgres@postgres.presprod.svc.cluster.local:5432/postgres"
+              value: postgresql://postgres:postgres@postgres.presprod.svc.cluster.local:5432/postgres
+            - name: DJANGO_SECRET_KEY
+              value: "your-secret-key"
+            - name: POSTGRES_HOST
+              value: "postgres.presprod.svc.cluster.local"
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: "postgres"
+            - name: POSTGRES_DB
+              value: "postgres"
           volumeMounts:
             - name: media-storage
               mountPath: /django/khedma/media
