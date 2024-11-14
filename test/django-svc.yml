@@ -4,8 +4,10 @@ metadata:
   name: khedma-backend
   namespace: presprod
 spec:
-  ports:
-    - port: 8000
-      targetPort: 8000
   selector:
     app: khedma-backend
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+  type: ClusterIP  # You can change this to LoadBalancer or NodePort based on your needs
