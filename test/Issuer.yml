@@ -4,11 +4,10 @@ metadata:
   name: letsencrypt-prod
 spec:
   acme:
-    server: https://acme-v02.api.letsencrypt.org/directory  # ACME server URL for Let's Encrypt
-    email: blibechmedamine@gmail.com  # Replace with your email for Let's Encrypt registration
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: blibechmohamedamine@gmail.com
     privateKeySecretRef:
-      name: letsencrypt-prod-key  # Secret to store the private key
+      name: letsencrypt-prod
     solvers:
       - http01:
-          ingress:
-            class: nginx  # Adjust this if you're using a different ingress controller
+          ingress: {}
