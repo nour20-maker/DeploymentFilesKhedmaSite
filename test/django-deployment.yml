@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: khedma-backend
+  namespace: presprod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: khedma-backend
+  template:
+    metadata:
+      labels:
+        app: khedma-backend
+    spec:
+      containers:
+      - name: backend
+        image: mohamedamineblibech:v1.1
+        command: ["gunicorn", "khedma.wsgi", "--bind", "0.0.0.0:8000"]
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://postgres:postgres@postgres.presprod.svc.cluster.local:5432/postgres"
+        volumeMounts:
+        - name: media-storage
+          mountPath: /django/khedma/media
+      volumes:
+      - name: media-storage
+        persistentVolumeClaim:
+          claimName: media-pvc
