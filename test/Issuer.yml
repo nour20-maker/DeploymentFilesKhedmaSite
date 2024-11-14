@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory  # ACME server URL for Let's Encrypt
+    email: blibechmedamine@gmail.com  # Replace with your email for Let's Encrypt registration
+    privateKeySecretRef:
+      name: letsencrypt-prod-key  # Secret to store the private key
+    solvers:
+      - http01:
+          ingress:
+            class: nginx  # Adjust this if you're using a different ingress controller
