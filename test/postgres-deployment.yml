@@ -1,8 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres
-  namespace: presprod
+  name: postgres-deployment
 spec:
   replicas: 1
   selector:
@@ -15,20 +14,30 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres:latest
+          image: postgres:15.3-alpine
           env:
+            - name: POSTGRES_DB
+              value: "postgres"
             - name: POSTGRES_USER
               value: "postgres"
             - name: POSTGRES_PASSWORD
               value: "postgres"
-            - name: POSTGRES_DB
-              value: "postgres"
-          ports:
-            - containerPort: 5432
           volumeMounts:
-            - name: media-storage
+            - name: postgres-data
               mountPath: /var/lib/postgresql/data
       volumes:
-        - name: media-storage
+        - name: postgres-data
           persistentVolumeClaim:
-            claimName: media-pvc
+            claimName: postgres-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+spec:
+  selector:
+    app: postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
