@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: backend-cert
+  namespace: default
+spec:
+  secretName: ssl-cert-secret
+  issuerRef:
+    name: letsencrypt-prod
+  commonName: khedma123456.ddns.net
+  dnsNames:
+    - khedma123456.ddns.net
+  usages:
+    - digital signature
+    - key encipherment
+    - server auth
