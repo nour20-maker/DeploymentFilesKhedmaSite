@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: presprod
+spec:
+  selector:
+    app: khedma-backend
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: 8000
+  type: ClusterIP
