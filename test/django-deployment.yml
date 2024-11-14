@@ -1,42 +1,45 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: khedma-backend
-  namespace: presprod
+  name: backend-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: khedma-backend
+      app: backend
   template:
     metadata:
       labels:
-        app: khedma-backend
+        app: backend
     spec:
       containers:
         - name: backend
-          image: mohamedamineblibech:v1.1  # Make sure this image is built and pushed to a registry
+          image: your-backend-image  # replace with your backend image
+          command: ["gunicorn", "khedma.wsgi", "--bind", "0.0.0.0:8000", "--certfile=/etc/ssl/certs/fullchain.pem", "--keyfile=/etc/ssl/private/privkey.pem"]
           ports:
             - containerPort: 8000
-          env:
-            - name: DATABASE_URL
-              value: postgresql://postgres:postgres@postgres.presprod.svc.cluster.local:5432/postgres
-            - name: DJANGO_SECRET_KEY
-              value: "your-secret-key"
-            - name: POSTGRES_HOST
-              value: "postgres.presprod.svc.cluster.local"
-            - name: POSTGRES_PORT
-              value: "5432"
-            - name: POSTGRES_USER
-              value: "postgres"
-            - name: POSTGRES_PASSWORD
-              value: "postgres"
-            - name: POSTGRES_DB
-              value: "postgres"
           volumeMounts:
-            - name: media-storage
+            - name: ssl-certs
+              mountPath: /etc/ssl
+            - name: media
               mountPath: /django/khedma/media
       volumes:
-        - name: media-storage
+        - name: ssl-certs
+          secret:
+            secretName: ssl-cert-secret  # Reference to the secret where Cert-Manager will store the SSL certs
+        - name: media
           persistentVolumeClaim:
             claimName: media-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: 8000
+  type: LoadBalancer
