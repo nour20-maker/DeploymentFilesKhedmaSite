@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: mohamedamineblibech/backend:v1.1  # Replace with your actual backend image
+          image: mohamedamineblibech/backend:v1.2  # Replace with your actual backend image
           command: ["gunicorn", "khedma.wsgi", "--bind", "0.0.0.0:8000"]
           ports:
             - containerPort: 8000
