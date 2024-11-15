@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend-deployment
+  namespace: presprod  # Specify the namespace
 spec:
   replicas: 1
   selector:
@@ -14,28 +15,19 @@ spec:
     spec:
       containers:
         - name: backend
-          image: mohamedamineblibech/backend:v1.1  # replace with your backend image
-          command: ["gunicorn", "khedma.wsgi", "--bind", "0.0.0.0:8000", "--certfile=/etc/ssl/certs/fullchain.pem", "--keyfile=/etc/ssl/private/privkey.pem"]
+          image: mohamedamineblibech/backend:v1.1  # Replace with your actual backend image
+          command: ["gunicorn", "khedma.wsgi", "--bind", "0.0.0.0:8000"]
           ports:
             - containerPort: 8000
           volumeMounts:
-            - name: ssl-certs
-              mountPath: /etc/ssl/certs/fullchain.pem
-              subPath: tls.crt
+            - name: backend-cert-volume
+              mountPath: "/etc/ssl/certs"  # Adjusted path to match expected cert path
               readOnly: true
-            - name: ssl-certs
-              mountPath: /etc/ssl/private/privkey.pem
-              subPath: tls.key
-              readOnly: true
-            - name: media
-              mountPath: /django/khedma/media
       volumes:
-        - name: ssl-certs
+        - name: backend-cert-volume
           secret:
-            secretName: backend-cert-kz46d  # Use the dynamically generated secret name
-        - name: media
-          persistentVolumeClaim:
-            claimName: media-pvc
+            secretName: backend-cert-kz46d  # Reference the actual secret name
+
 ---
 apiVersion: v1
 kind: Service
