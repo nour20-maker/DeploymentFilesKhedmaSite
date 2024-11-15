@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: acme-http01-ingress
+  namespace: presprod
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod  # Reference to the ClusterIssuer
+spec:
+  rules:
+    - host: khedma123456.ddns.net
+      http:
+        paths:
+          - path: /.well-known/acme-challenge/*
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-service  # This should be the name of your service
+                port:
+                  number: 443  # Since the service exposes HTTPS traffic on port 443
