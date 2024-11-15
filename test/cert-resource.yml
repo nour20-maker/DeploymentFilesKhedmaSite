@@ -2,15 +2,11 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: backend-cert
-  namespace: presprod
+  namespace: presprod  # Ensure this is the same namespace as your application
 spec:
-  secretName: ssl-cert-secret
-  issuerRef:
-    name: letsencrypt-prod
-  commonName: khedma123456.ddns.net
+  secretName: backend-cert  # The secret where the certificate will be stored
   dnsNames:
-    - khedma123456.ddns.net
-  usages:
-    - digital signature
-    - key encipherment
-    - server auth
+    - khedma123456.ddns.net  # Replace with your actual domain name
+  issuerRef:
+    name: letsencrypt-prod  # The ClusterIssuer you defined
+    kind: ClusterIssuer

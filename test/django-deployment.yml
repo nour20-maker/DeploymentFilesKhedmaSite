@@ -20,7 +20,13 @@ spec:
             - containerPort: 8000
           volumeMounts:
             - name: ssl-certs
-              mountPath: /etc/ssl
+              mountPath: /etc/ssl/certs/fullchain.pem
+              subPath: tls.crt
+              readOnly: true
+            - name: ssl-certs
+              mountPath: /etc/ssl/private/privkey.pem
+              subPath: tls.key
+              readOnly: true
             - name: media
               mountPath: /django/khedma/media
       volumes:
