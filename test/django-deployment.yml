@@ -40,10 +40,7 @@ kind: Service
 metadata:
   name: backend-service
 spec:
-  selector:
-    app: backend
   ports:
-    - protocol: TCP
-      port: 443
-      targetPort: 8000
-  type: LoadBalancer
+    - port: 80
+      targetPort: 8000  # Assuming your application listens on 8000 internally
+      protocol: TCP
