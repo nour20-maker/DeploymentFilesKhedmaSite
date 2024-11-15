@@ -26,7 +26,7 @@ spec:
       volumes:
         - name: ssl-certs
           secret:
-            secretName: ssl-cert-secret  # Reference to the secret where Cert-Manager will store the SSL certs
+            secretName: backend-cert-kz46d  # Use the dynamically generated secret name
         - name: media
           persistentVolumeClaim:
             claimName: media-pvc
