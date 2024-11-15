@@ -22,36 +22,24 @@ spec:
               value: "postgres"
             - name: POSTGRES_PASSWORD
               value: "postgres"
+            - name: PGDATA
+              value: "/var/lib/postgresql/data/pgdata"  # Use a subdirectory
           volumeMounts:
             - name: postgres-data
-              mountPath: /var/lib/postgresql/data
+              mountPath: /var/lib/postgresql/data  # Main mount path
       volumes:
         - name: postgres-data
           persistentVolumeClaim:
-            claimName: postgres-pvc
+            claimName: postgres-pvc  # Ensure this matches your PVC name
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: postgres-service
 spec:
-  initContainers:
-    - name: init-postgres-data
-      image: busybox
-      command: ["sh", "-c", "rm -rf /var/lib/postgresql/data/*"]
-      volumeMounts:
-        - name: postgres-data
-          mountPath: /var/lib/postgresql/data
-  containers:
-    - name: postgres
-      image: postgres:15.3-alpine
-      env:
-        - name: POSTGRES_DB
-          value: "postgres"
-        - name: POSTGRES_USER
-          value: "postgres"
-        - name: POSTGRES_PASSWORD
-          value: "postgres"
-      volumeMounts:
-        - name: postgres-data
-          mountPath: /var/lib/postgresql/data
+  selector:
+    app: postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
