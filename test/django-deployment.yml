@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend-deployment
-  namespace: presprod  # Specify the namespace
+  namespace: presprod
 spec:
   replicas: 1
   selector:
@@ -21,12 +21,18 @@ spec:
             - containerPort: 8000
           volumeMounts:
             - name: backend-cert-volume
-              mountPath: "/etc/ssl/certs"  # Adjusted path to match expected cert path
+              mountPath: "/etc/ssl/certs/fullchain.pem"  # Mount fullchain.pem from the secret
+              subPath: tls.crt
+              readOnly: true
+            - name: backend-cert-volume
+              mountPath: "/etc/ssl/private/privkey.pem"  # Mount privkey.pem from the secret
+              subPath: tls.key
               readOnly: true
       volumes:
         - name: backend-cert-volume
           secret:
-            secretName: backend-cert-kz46d  # Reference the actual secret name
+            secretName: backend-cert-kz46d  # Ensure the correct secret name is used
+
 
 ---
 apiVersion: v1
