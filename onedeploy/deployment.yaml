@@ -16,12 +16,23 @@ spec:
         app: backend
     spec:
       imagePullSecrets:
-        - name: dockerhub-secret
+        - name: dockerhub-secret  # If you're pulling from a private Docker registry
       containers:
         - name: backend
           image: mohamedamineblibech/backend:v12
           ports:
             - containerPort: 8080
+          env:
+            - name: DATABASE_HOST
+              value: "database"  # The name of the database service in Kubernetes
+            - name: DATABASE_PORT
+              value: "5432"      # Default PostgreSQL port
+            - name: DATABASE_NAME
+              value: "postgres"  # The database name
+            - name: DATABASE_USER
+              value: "postgres"  # The database user
+            - name: DATABASE_PASSWORD
+              value: "postgres"  # The database password
           resources:
             requests:
               memory: "512Mi"
