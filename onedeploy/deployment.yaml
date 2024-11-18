@@ -19,6 +19,6 @@ spec:
       - name: dockerhub-secret
       containers:
       - name: backend
-        image: mohamedamine/backend:v11
+        image: mohamedamineblibech/backend:v11
         ports:
         - containerPort: 8080
