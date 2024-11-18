@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-pv
+  namespace: khedma
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard # Ensure this matches the PVC's storage class if using dynamic provisioning
+  hostPath:
+    path: /mnt/data/postgres  # Or adjust the path as necessary based on your environment
