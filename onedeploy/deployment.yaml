@@ -40,4 +40,19 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "100m"
+          # Ensure the backend container has a proper health check
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
 
