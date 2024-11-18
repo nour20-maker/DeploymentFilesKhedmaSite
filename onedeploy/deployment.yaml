@@ -36,10 +36,10 @@ spec:
           resources:
             requests:
               memory: "256Mi"
-              cpu: "50m"
+              cpu: "25m"
             limits:
               memory: "512Mi"
-              cpu: "100m"
+              cpu: "50m"
           # Ensure the backend container has a proper health check
           readinessProbe:
             httpGet:
