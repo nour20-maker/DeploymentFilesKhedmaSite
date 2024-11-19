@@ -5,7 +5,7 @@ metadata:
   name: postgres-secrets
 type: Opaque
 data:
-  database: cG9zdGdyZXNxdWw=  # Base64 encoded value of "postgresql"
+  database: cG9zdGdyZXM=  # Base64 encoded value of "postgresql"
   username: cG9zdGdyZXM=     # Base64 encoded value of "postgres"
   password: cG9zdGdyZXM=     # Base64 encoded value of "postgres"
 
