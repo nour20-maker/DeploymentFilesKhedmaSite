@@ -5,9 +5,10 @@ metadata:
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: blibechmedamine@gmail.com
+    email: your-email@example.com  # Replace with your email
     privateKeySecretRef:
-      name: letsencrypt-prod
+      name: letsencrypt-prod-key
     solvers:
       - http01:
-          ingress: {}
+          ingress:
+            class: nginx  # Ensure this matches your ingress controller class

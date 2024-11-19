@@ -1,19 +1,17 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: acme-http01-ingress
+  name: cm-acme-http-solver-gfjx5
   namespace: presprod
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod  # Reference to the ClusterIssuer
 spec:
   rules:
-  - host: khedma123456.ddns.net
-    http:
-      paths:
-      - path: /.well-known/acme-challenge/*
-        pathType: Prefix
-        backend:
-          service:
-            name: backend-service
-            port:
-              number: 80
+    - host: khedma123456.ddns.net
+      http:
+        paths:
+          - path: /.well-known/acme-challenge/*
+            pathType: Prefix
+            backend:
+              service:
+                name: cm-acme-http-solver-ng5wn  # This is the solver service name
+                port:
+                  number: 80
