@@ -1,3 +1,5 @@
+---
+# Deployment for the Django backend
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -6,7 +8,7 @@ metadata:
   labels:
     app: backend
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: backend
@@ -16,23 +18,38 @@ spec:
         app: backend
     spec:
       imagePullSecrets:
-        - name: dockerhub-secret  # If you're pulling from a private Docker registry
+        - name: dockerhub-secret  # If using a private Docker registry
       containers:
         - name: backend
           image: mohamedamineblibech/backend:v12
           ports:
-            - containerPort: 8080
+            - containerPort: 8000
           env:
             - name: DATABASE_HOST
-              value: "database"  # The name of the database service in Kubernetes
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: DATABASE_HOST
             - name: DATABASE_PORT
-              value: "5432"      # Default PostgreSQL port
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: DATABASE_PORT
             - name: DATABASE_NAME
-              value: "postgres"  # The database name
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: DATABASE_NAME
             - name: DATABASE_USER
-              value: "postgres"  # The database user
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secrets
+                  key: username
             - name: DATABASE_PASSWORD
-              value: "postgres"  # The database password
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secrets
+                  key: password
           resources:
             requests:
               memory: "256Mi"
@@ -40,19 +57,45 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "50m"
-          # Ensure the backend container has a proper health check
           readinessProbe:
             httpGet:
               path: /health
-              port: 8080
+              port: 8000
             initialDelaySeconds: 5
             periodSeconds: 5
-            failureThreshold: 3
           livenessProbe:
             httpGet:
               path: /health
-              port: 8080
+              port: 8000
             initialDelaySeconds: 10
             periodSeconds: 10
-            failureThreshold: 3
+      affinity: # Ensures pods are spread across different nodes
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - backend
+                topologyKey: "kubernetes.io/hostname"
 
+
+---
+# Service to expose the backend with NodePort
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: khedma
+spec:
+  selector:
+    app: backend
+  ports:
+    - protocol: TCP
+      port: 80         # Exposed NodePort
+      targetPort: 8000 # Backend container port
+  type: NodePort
+  nodePort: 30080      # NodePort for external access

@@ -1,33 +1,10 @@
-# Secret
-apiVersion: v1
-kind: Secret
-metadata:
-  name: postgres-secrets
-type: Opaque
-data:
-  database: cG9zdGdyZXM=  # Base64 encoded value of "postgresql"
-  username: cG9zdGdyZXM=     # Base64 encoded value of "postgres"
-  password: cG9zdGdyZXM=     # Base64 encoded value of "postgres"
-
 ---
-# Persistent Volume Claim
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: postgres-pvc
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-
----
-# Deployment
+# PostgreSQL Deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres
+  namespace: khedma
 spec:
   replicas: 1
   selector:
@@ -39,17 +16,13 @@ spec:
         app: postgres
     spec:
       containers:
-        - name: postgresdb
+        - name: postgres
           image: postgres:15.3-alpine
-          imagePullPolicy: "IfNotPresent"
           ports:
             - containerPort: 5432
           env:
             - name: POSTGRES_DB
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secrets
-                  key: database
+              value: postgres
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
@@ -61,25 +34,19 @@ spec:
                   name: postgres-secrets
                   key: password
           volumeMounts:
-            - mountPath: /var/lib/postgresql/data
-              name: postgresdb
-            - name: postgres-secrets
-              mountPath: "/etc/postgres-secrets"
-              readOnly: true
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
       volumes:
-        - name: postgresdb
-          persistentVolumeClaim:
-            claimName: postgres-pvc
-        - name: postgres-secrets
-          secret:
-            secretName: postgres-secrets
+        - name: postgres-data
+          emptyDir: {}
 
 ---
-# Service
+# PostgreSQL Service
 apiVersion: v1
 kind: Service
 metadata:
   name: postgres-service
+  namespace: khedma
 spec:
   selector:
     app: postgres
