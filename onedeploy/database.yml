@@ -15,9 +15,9 @@ spec:
           image: postgres:15.3-alpine
           env:
             - name: POSTGRES_DB
-              value: postgres
+              value: "postgres"
             - name: POSTGRES_USER
-              value: postgres
+              value: "postgres"
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
