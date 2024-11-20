@@ -4,20 +4,21 @@ metadata:
   name: backend-ingress
   namespace: khedma
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
+    cert-manager.io/issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
   rules:
-  - host: khedma123456.ddns.net  # Your domain name
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: backend-service  # Your service name
-            port:
-              number: 443  # Your service port
+    - host: khedma123456.ddns.net  # Your custom domain
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-service
+                port:
+                  number: 443
   tls:
-  - hosts:
-    - khedma123456.ddns.net
-    secretName: backend-cert
+    - hosts:
+        - khedma123456.ddns.net  # Your custom domain
+      secretName: backend-tls-secret
