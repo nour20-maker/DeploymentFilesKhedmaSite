@@ -3,13 +3,8 @@ kind: Deployment
 metadata:
   name: database
   namespace: khedma
-  labels:
-    app: database
 spec:
   replicas: 1
-  selector:
-    matchLabels:
-      app: database
   template:
     metadata:
       labels:
@@ -20,21 +15,17 @@ spec:
           image: postgres:15.3-alpine
           env:
             - name: POSTGRES_DB
-              value: "postgres"
+              value: postgres
             - name: POSTGRES_USER
-              value: "postgres"
+              value: postgres
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: postgres-secret
                   key: POSTGRES_PASSWORD
           volumeMounts:
-            - mountPath: /var/lib/postgresql/data/pgdata
-              name: postgres-data
-          env:
-            - name: PGDATA
-              value: /var/lib/postgresql/data/pgdata
-
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
       volumes:
         - name: postgres-data
           persistentVolumeClaim:
