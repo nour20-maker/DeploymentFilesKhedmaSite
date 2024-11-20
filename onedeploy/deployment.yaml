@@ -3,12 +3,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend-deployment
-  namespace: khedma
+  name: backend
   labels:
     app: backend
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: backend
@@ -22,65 +21,25 @@ spec:
       containers:
         - name: backend
           image: mohamedamineblibech/backend:v12
+          command: ["gunicorn", "khedma.wsgi", "--bind", "0.0.0.0:8000", "--certfile=/etc/ssl/certs/fullchain.pem", "--keyfile=/etc/ssl/private/privkey.pem"]
           ports:
             - containerPort: 8000
-          env:
-            - name: DATABASE_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: backend-config
-                  key: DATABASE_HOST
-            - name: DATABASE_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: backend-config
-                  key: DATABASE_PORT
-            - name: DATABASE_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: backend-config
-                  key: DATABASE_NAME
-            - name: DATABASE_USER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secrets
-                  key: username
-            - name: DATABASE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secrets
-                  key: password
-          resources:
-            requests:
-              memory: "256Mi"
-              cpu: "100m"
-            limits:
-              memory: "512Mi"
-              cpu: "200m"
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: 8000
-            initialDelaySeconds: 5
-            periodSeconds: 5
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 8000
-            initialDelaySeconds: 10
-            periodSeconds: 10
-      affinity: # Ensures pods are spread across different nodes
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              podAffinityTerm:
-                labelSelector:
-                  matchExpressions:
-                    - key: app
-                      operator: In
-                      values:
-                        - backend
-                topologyKey: "kubernetes.io/hostname"
+          volumeMounts:
+            - mountPath: /django/khedma/media
+              name: media-volume
+            - mountPath: /etc/ssl/certs/fullchain.pem
+              subPath: fullchain.pem
+              name: cert-volume
+            - mountPath: /etc/ssl/private/privkey.pem
+              subPath: privkey.pem
+              name: cert-volume
+      volumes:
+        - name: media-volume
+          hostPath:
+            path: ../media
+        - name: cert-volume
+          secret:
+            secretName: backend-cert
 
 
 ---
@@ -95,7 +54,6 @@ spec:
     app: backend
   ports:
     - protocol: TCP
-      port: 80         # Exposed NodePort
-      targetPort: 8000 # Backend container port
-  type: NodePort
-  nodePort: 30080      # NodePort for external access
+      port: 443
+      targetPort: 8000
+  type: ClusterIP

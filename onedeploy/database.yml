@@ -1,47 +1,38 @@
----
-# PostgreSQL Deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres
+  name: database
   namespace: khedma
+  labels:
+    app: database
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: postgres
+      app: database
   template:
     metadata:
       labels:
-        app: postgres
+        app: database
     spec:
       containers:
         - name: postgres
           image: postgres:15.3-alpine
-          ports:
-            - containerPort: 5432
           env:
             - name: POSTGRES_DB
-              value: postgres
+              value: "postgres"
             - name: POSTGRES_USER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secrets
-                  key: username
+              value: "postgres"
             - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secrets
-                  key: password
+              value: "postgres"
           volumeMounts:
-            - name: postgres-data
-              mountPath: /var/lib/postgresql/data
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-data
       volumes:
         - name: postgres-data
           persistentVolumeClaim:
             claimName: postgres-pvc
 ---
-# Persistent Volume Claim for PostgreSQL
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -52,21 +43,4 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi  # Adjust the size based on your requirements
-
-
----
-# PostgreSQL Service
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgres-service
-  namespace: khedma
-spec:
-  selector:
-    app: postgres
-  ports:
-    - protocol: TCP
-      port: 5432
-      targetPort: 5432
-  type: ClusterIP
+      storage: 5Gi
