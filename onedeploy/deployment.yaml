@@ -54,6 +54,8 @@ spec:
     app: backend
   ports:
     - protocol: TCP
-      port: 443
-      targetPort: 8000
-  type: ClusterIP
+      port: 443         # Le port accessible dans le cluster
+      targetPort: 8000  # Le port de l'application dans le conteneur
+      nodePort: 30080   # (Optionnel) Le port exposé sur chaque nœud
+  type: NodePort        # Type modifié pour exposer en NodePort
+
