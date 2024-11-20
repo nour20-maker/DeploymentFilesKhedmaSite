@@ -8,10 +8,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - khedma1234567.ddns.net
+        - khedma123456.ddns.net
       secretName: backend-cert
   rules:
-    - host: khedma1234567.ddns.net
+    - host: khedma123456.ddns.net
       http:
         paths:
           - path: /
