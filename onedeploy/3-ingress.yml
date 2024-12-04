@@ -11,7 +11,7 @@ spec:
     - khedma12345.ddns.net
     secretName: khedma-app-tls
   rules:
-  - host: 138.68.125.193
+  - host: "138.68.125.193"
     http:
       paths:
       - path: /
