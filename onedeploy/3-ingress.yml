@@ -1,28 +1,19 @@
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: v1
+kind: Service
 metadata:
-  name: khedma-app
+  name: ingress-nginx-controller
+  namespace: ingress-nginx
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-cluster-issuer"
-    nginx.ingress.kubernetes.io/server-snippet: |
-      listen 138.68.125.193:80;
-      listen [::]:80;
-      listen 138.68.125.193:443 ssl;
-      listen [::]:443 ssl;
+    service.beta.kubernetes.io/do-loadbalancer-id: "138.68.125.193" # Replace with your provider-specific annotation
 spec:
-  ingressClassName: nginx
-  tls:
-  - hosts:
-    - khedma12345.ddns.net
-    secretName: khedma-app-tls
-  rules:
-  - host: khedma12345.ddns.net
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: frontend-service
-            port:
-              number: 80
+  type: LoadBalancer
+  loadBalancerIP: 138.68.125.193
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 80
+  - name: https
+    protocol: TCP
+    port: 443
+    targetPort: 443
