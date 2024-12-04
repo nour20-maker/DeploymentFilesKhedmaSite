@@ -5,11 +5,9 @@ metadata:
   labels:
     app: khedma-app
 spec:
-  type: LoadBalancer
   selector:
     app: khedma-app
   ports:
-    - protocol: TCP
-      name: http
-      port: 80
-      targetPort: 3000
+  - protocol: TCP
+    port: 80
+    targetPort: 3000
