@@ -4,10 +4,6 @@ metadata:
   name: khedma-app
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-cluster-issuer"
-    nginx.ingress.kubernetes.io/server-snippet: |
-      if ($host = "138.68.125.193") {
-        return 301 https://khedma12345.ddns.net$request_uri;
-      }
 spec:
   ingressClassName: nginx
   tls:
@@ -15,7 +11,7 @@ spec:
     - khedma12345.ddns.net
     secretName: khedma-app-tls
   rules:
-  - host: khedma12345.ddns.net
+  - host: 138.68.125.193
     http:
       paths:
       - path: /
