@@ -79,6 +79,6 @@ spec:
     spec:
       containers:
       - name: khedma-app
-        image: mohamedamineblibech/frontend:v1.0
+        image: mohamedamineblibech/frontend:v1.1
         ports:
         - containerPort: 3000
