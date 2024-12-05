@@ -12,11 +12,18 @@ spec:
       type: reactnode
   template:
     metadata:
-       labels:
+      labels:
         type: reactnode
     spec:
+      imagePullSecrets:
+      - name: dockerhub-secret
       containers:
       - name: front-app
         image: mohamedamineblibech/frontend:v1.1
         ports:
         - containerPort: 3000
+        resources:
+          requests:
+            memory: "200Mi"
+          limits:
+            memory: "500Mi"
