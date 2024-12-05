@@ -12,8 +12,7 @@ spec:
       type: reactnode
   template:
     metadata:
-      namespace: default
-      labels:
+       labels:
         type: reactnode
     spec:
       containers:
