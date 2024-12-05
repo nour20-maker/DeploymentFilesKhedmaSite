@@ -89,10 +89,10 @@ spec:
     spec:
       containers:
       - name: example-app
-        image: mohamedamineblibech/frontend:v1.1
+        image: odoo
         imagePullPolicy: Always
         ports:
-        - containerPort: 3000
+        - containerPort: 8069
         # livenessProbe:
         #   httpGet:
         #     path: /status
