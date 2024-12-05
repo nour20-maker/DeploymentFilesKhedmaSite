@@ -5,10 +5,7 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    # Port of the container inside the pod
-    - targetPort: 3000
-      # Port of the service that will expose the container's port
-      port: 80
-  # Labels to match the target pods
+  - port: 80
+    targetPort: 3000
   selector:
     type: reactnode

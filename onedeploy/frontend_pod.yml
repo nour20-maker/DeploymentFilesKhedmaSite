@@ -9,6 +9,4 @@ spec:
   - name: front-app
     image: mohamedamineblibech/frontend:v1.1
     ports:
-      - name: front-app
-        containerPort: 3000
-        targetPort: 80
+    - containerPort: 3000
