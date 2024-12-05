@@ -89,10 +89,10 @@ spec:
     spec:
       containers:
       - name: example-app
-        image: aimvector/python:1.0.4
+        image: mohamedamineblibech/frontend:v1.1
         imagePullPolicy: Always
         ports:
-        - containerPort: 5000
+        - containerPort: 3000
         # livenessProbe:
         #   httpGet:
         #     path: /status
