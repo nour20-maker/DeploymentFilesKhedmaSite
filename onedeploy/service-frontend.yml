@@ -1,31 +1,14 @@
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: frontend-service
-#   labels:
-#     app: khedma-app
-# spec:
-#   type: LoadBalancer
-#   selector:
-#     app: khedma-app
-#   ports:
-#   - protocol: TCP
-#     name: http
-#     port: 80
-#     targetPort: 3000
-# ##
 apiVersion: v1
 kind: Service
 metadata:
-  name: example-service
-  labels:
-    app: example-app
+  name: my-service
 spec:
   type: LoadBalancer
-  selector:
-    app: example-app
   ports:
-    - protocol: TCP
-      name: http
+    # Port of the container inside the pod
+    - targetPort: 3000
+      # Port of the service that will expose the container's port
       port: 80
-      targetPort: 8069
+  # Labels to match the target pods
+  selector:
+    type: reactnode
