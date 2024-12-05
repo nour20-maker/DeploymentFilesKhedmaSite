@@ -7,10 +7,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - khedma12345.ddns.net
+    - temp1234567.ddns.net
     secretName: example-app-tls
   rules:
-  - host: khedma12345.ddns.net
+  - host: temp1234567.ddns.net
     http:
       paths:
       - path: /
