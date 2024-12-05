@@ -3,12 +3,12 @@ kind: Ingress
 metadata:
   annotations:
     kubernetes.io/ingress.class: "nginx"
-  name: khedma-app
+  name: example-app
 spec:
   tls:
   - hosts:
     - khedma12345.ddns.net
-    secretName: khedma-app-tls
+    secretName: example-app-tls
   rules:
   - host: khedma12345.ddns.net
     http:
@@ -17,6 +17,6 @@ spec:
         pathType: Prefix
         backend:
           service: 
-            name: frontend-service
+            name: example-service
             port: 
               number: 80
