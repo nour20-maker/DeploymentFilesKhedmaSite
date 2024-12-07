@@ -5,9 +5,11 @@ metadata:
   namespace: default
   annotations:
     kubernetes.io/ingress.class: "nginx"
-    service.beta.kubernetes.io/do-loadbalancer-name: "temp1234567.ddns.net"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header Host "209.38.112.8";
 spec:
-  ingressClassName: nginx # Explicitly set the IngressClassName
+  ingressClassName: nginx
   tls:
   - hosts:
     - temp1234567.ddns.net
