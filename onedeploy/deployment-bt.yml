@@ -1,0 +1,54 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: default
+  name: backend-deploy
+  labels:
+    app: backend-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend-app
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: backend-app
+    spec:
+      imagePullSecrets:
+      - name: dockerhub-secret # Ensure this secret exists
+      containers:
+      - name: backend-app
+        image: mohamedamineblibech/backend:v1.1
+        ports:
+        - containerPort: 80
+        env:
+        - name: DATABASE_URL
+          value: "postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@postgres-service:5432/postgres"
+        envFrom:
+        - secretRef:
+            name: postgres-secret
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: default
+  name: backend-service
+  labels:
+    app: backend-app
+spec:
+  type: ClusterIP
+  selector:
+    app: backend-app
+  ports:
+  - protocol: TCP
+    name: http
+    port: 8080
+    targetPort: 80
