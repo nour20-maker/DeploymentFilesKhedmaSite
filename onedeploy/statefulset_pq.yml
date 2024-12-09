@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: postgres
-        image: postgres:15
+        image: postgres:15.3-alpine
         ports:
         - containerPort: 5432
         envFrom:
@@ -38,12 +38,6 @@ spec:
       resources:
         requests:
           storage: 5Gi
-  volumes:
-    - name: postgres-backup
-      hostPath:
-        path: ./backup_data/db
-        type: DirectoryOrCreate
-
 ---
 # PostgreSQL Headless Service (for internal communication within the StatefulSet)
 apiVersion: v1
