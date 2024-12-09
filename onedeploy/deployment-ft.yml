@@ -28,6 +28,17 @@ spec:
         image: mohamedamineblibech/frontend:v1.1 # Make sure this image is available
         ports:
         - containerPort: 3000
+        env:
+        - name: REACT_APP_API_URL
+          value: "https://temp1234567.ddns.net"
+        - name: REACT_APP_PUBLIC_FOLDER
+          value: "https://temp1234567.ddns.net/media/images/"
+        - name: HOST
+          value: "0.0.0.0"
+        - name: PORT
+          value: "3000"
+        - name: DANGEROUSLY_DISABLE_HOST_CHECK
+          value: "true"
         # Uncomment volumeMounts if you are using secrets or configMaps
         # volumeMounts:
         # - name: secret-volume
