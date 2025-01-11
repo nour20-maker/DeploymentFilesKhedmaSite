@@ -1,0 +1,193 @@
+pipeline {
+    agent {
+        kubernetes {
+      yaml '''
+      apiVersion: v1
+      kind: Pod
+      spec:
+        containers:
+        - name: git
+          image: alpine/git
+          command:
+          - cat
+          tty: true
+        - name: dind
+          image: docker:24.0.2-dind
+          securityContext:
+            privileged: true
+          env:
+            - name: DOCKER_TLS_CERTDIR
+              value: ""
+          resources:
+            limits:
+              memory: "4Gi"
+              cpu: "300m"
+            requests:
+              memory: "2Gi"
+              cpu: "200m"
+          volumeMounts:
+           - mountPath: /var/lib/docker
+             name: docker-graph-storage
+        volumes:
+        - name: docker-graph-storage
+          emptyDir: {}
+      '''
+        }
+    }
+    environment {
+        GIT_USER_NAME = 'nour20-maker'
+        GIT_USER_EMAIL = 'nourelhouda.zraibia@esprit.tn'
+        GIT_CREDENTIALS_ID = 'github'
+        GITHUB_TOKEN = credentials('github')
+        DOCKER_CREDENTIALS_ID = 'dockerhub'
+        K8S_YAML_PATH1 = 'Prod/backend-deployment.yaml'
+        K8S_YAML_PATH2 = 'Prod/nginx-deployment.yaml'
+    }
+    stages {
+        stage('Checkout Repository') {
+            steps {
+                container('git') {
+                    script {
+                        withCredentials([usernamePassword(credentialsId: "${GIT_CREDENTIALS_ID}", usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                            sh """
+                            git config --global user.name "${GIT_USER_NAME}"
+                            git config --global user.email "${GIT_USER_EMAIL}"
+                            
+                            git clone https://\$GIT_USERNAME:\$GIT_PASSWORD@github.com/nour20-maker/KhedmaSiteDeployKubernetes.git 
+                            git clone https://\$GIT_USERNAME:\$GIT_PASSWORD@github.com/nour20-maker/DeploymentFilesKhedmaSite.git 
+                            """
+                        }
+                    }
+                }
+            }
+        }
+        stage('Get Commit Hash') {
+            steps {
+                container('git') {
+                    script {
+                        COMMIT_HASH = sh(script: 'git -C KhedmaSiteDeployKubernetes rev-parse --short HEAD', returnStdout: true).trim()
+                        echo "Commit hash: ${env.COMMIT_HASH}"
+                    }
+                }
+            }
+        }
+        stage('Update manage.py for Production') {
+            steps {
+                container('git') {
+                    script {
+                        sh """
+                        cd KhedmaSiteDeployKubernetes/django/khedma
+                        sed -i "s|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings')|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings_prod')|" manage.py
+                        echo "Updated manage.py:"
+                        cat manage.py
+                        cd khedma
+                        sed -i "s|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings')|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings_prod')|" asgi.py
+                        echo "Updated asgi.py:"
+                        cat asgi.py
+                        
+                        sed -i "s|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings')|os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'khedma.settings_prod')|" wsgi.py
+                        echo "Updated wsgi.py:"
+                        cat wsgi.py
+                
+                        cd ../../../reactjs/khedma
+                      
+                        echo " Update REACT_APP_API_URL in .env"
+                        sed -i "s|REACT_APP_API_URL=.*|REACT_APP_API_URL=http://46.101.124.182:30011|" .env
+                        
+                        echo " Update REACT_APP_PUBLIC_FOLDER in .env"
+                        sed -i "s|REACT_APP_PUBLIC_FOLDER=.*|REACT_APP_PUBLIC_FOLDER='http://46.101.124.182:30010/media/images/'|" .env
+
+                        echo " Update REACT_APP_IMAGE_URL in .env "
+                        sed -i "s|REACT_APP_IMAGE_URL=.*|REACT_APP_IMAGE_URL='http://46.101.124.182:30010'|" .env
+                        
+                        echo " Update DJANGO_APP_IMAGE_URL in .env "
+                        sed -i "s|REACT_APP_DJANGO_IMAGE_URL=.*|REACT_APP_DJANGO_IMAGE_URL='http://46.101.124.182:30011'|" .env
+                        
+                        echo " Print the updated .env for debugging "
+                        echo "Updated .env:"
+                        cat .env
+                        """
+                    }
+                }
+            }
+        }
+        stage('Build Docker Images') {
+            steps {
+                container('dind') {
+                    retry(3) {
+                        timeout(time: 30, unit: 'MINUTES') {
+                            script {
+                                def images = [
+                                    [name: 'prod-frontend', path: './reactjs/khedma']
+                                    , [name: 'prod-backend', path: './django/khedma']
+                                ]
+                                images.each { image ->
+                                    sh """
+                                        cd KhedmaSiteDeployKubernetes/${image.path}
+                                        docker build --progress=plain -t nourzraibia/${image.name}:${COMMIT_HASH} .
+                                    """
+                                    // Show image size
+                                    sh """
+                                       docker images nourzraibia/${image.name}:${COMMIT_HASH} --format "{{.Repository}}:{{.Tag}} - {{.Size}}"
+                                    """
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        stage('Push Docker Images') {
+            steps {
+                container('dind') {
+                    script {
+                        def images = [
+                            [name: 'prod-frontend']
+                            , [name: 'prod-backend']
+                        ]
+                        images.each { image ->
+                            retry(3) {
+                                withCredentials([usernamePassword(credentialsId: env.DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                                    sh """
+                                        docker login -u $DOCKER_USER -p $DOCKER_PASS
+                                        docker push nourzraibia/${image.name}:${COMMIT_HASH}
+                                    """
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        stage('Create Release') {
+            steps {
+                container('git') {
+                    script {
+                        env.TAG = sh(script: 'git -C KhedmaSiteDeployKubernetes rev-parse --short HEAD', returnStdout: true).trim()
+                        sh """
+                        cd KhedmaSiteDeployKubernetes
+                        git tag -a ${env.TAG} -m "Release for commit ${env.TAG}"
+                        git push --tags
+                        """
+                    }
+                }
+            }
+        }
+        stage('Update Kubernetes YAML') {
+            steps {
+                container('git') {
+                    script {
+                        sh """
+                        cd DeploymentFilesKhedmaSite
+                        sed -i 's|image: .*|image: nourzraibia/prod-backend:${env.TAG}|' ${K8S_YAML_PATH1}
+                        sed -i 's|image: .*|image: nourzraibia/prod-frontend:${env.TAG}|' ${K8S_YAML_PATH2}
+                        git add .
+                        git commit -m "Update image tag to ${env.TAG}" || echo "No changes to commit"
+                        git push
+                        """
+                    }
+                }
+            }
+        }
+    }
+}

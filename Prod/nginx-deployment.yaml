@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: prod
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: lou4y/khedma-site:latest
+        ports:
+        - containerPort: 80
+       # - containerPort: 443  # Add HTTPS port
+        volumeMounts:
+        - name: nginx-config-volume
+          mountPath: /etc/nginx/conf.d
+        - name: media-volume
+          mountPath: /django/khedma/media/
+        #- name: nginx-tls  # Mount the TLS certificate
+        #  mountPath: /etc/nginx/tls  # Change path as necessary
+      volumes:
+      - name: nginx-config-volume
+        configMap:
+          name: nginx-config
+      - name: media-volume
+        persistentVolumeClaim:
+          claimName: prod-backend-media-pvc
+      #- name: nginx-tls  # Reference the secret
+       # secret:
+        #  secretName: nginx-tls  # This should match the secret name from the Certificate

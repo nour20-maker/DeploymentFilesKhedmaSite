@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: lou4y/backend:4d8d805
+        ports:
+        - containerPort: 8000
+        volumeMounts:
+        - name: media-volume
+          mountPath: /django/khedma/media
+      volumes:
+      - name: media-volume
+        persistentVolumeClaim:
+          claimName: backend-media-pvc

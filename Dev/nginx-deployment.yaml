@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: lou4y/frontend:2975a0d
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: nginx-config-volume
+          mountPath: /etc/nginx/conf.d
+        - name: media-volume
+          mountPath: /django/khedma/media/   # Media files mount
+      volumes:
+      - name: nginx-config-volume
+        configMap:
+          name: nginx-config
+      - name: media-volume
+        persistentVolumeClaim:
+          claimName: backend-media-pvc

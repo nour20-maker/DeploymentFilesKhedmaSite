@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: prod-postgres-pv
+  namespace: prod
+  labels:
+    app: postgres
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 5Gi
+  hostPath:  # Use hostPath for local storage (ensure this matches your storage setup)
+    path: /mnt/data/prod_postgres
+  storageClassName: ""  # An empty storageClassName means it won't use any default StorageClass
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prod-postgres-pvc
+  namespace: prod
+  labels:
+    app: postgres
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: ""  # Make sure this matches the PersistentVolume's storageClassName
