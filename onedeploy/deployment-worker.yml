@@ -6,7 +6,7 @@ metadata:
   labels:
     deployment: celery-worker
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       pod: celery-worker
@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: celery-worker
-          image: mohamedamineblibech/backend:v1.284
+          image: mohamedamineblibech/backend:v1.363
           command: ['sh', '-c', "cd /django/khedma && celery -A khedma worker -l INFO"]
           envFrom:
             - secretRef:

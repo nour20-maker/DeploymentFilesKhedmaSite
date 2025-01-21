@@ -7,9 +7,6 @@ data:
   DEBUG: "True"
   REDIS_HOST: "khedma-redis"
   DB_HOST: "postgres-service"
-  ALLOWED_HOSTS: "khedma123456789.ddns.net,we-tekup,example-service"
+  ALLOWED_HOSTS: "khedma123456789.ddns.net,we-tekup.default.svc.cluster.local,example-service,we-tekup,combined-ingress"
   REACT_ADDRESS: "http://example-service"
-  CORS_ALLOWED_ORIGINS: "http://example-service,http://we-tekup,http://khedma123456789.ddns.net,https://khedma123456789.ddns.net"
-  SIMPLE_JWT_AUTH_HEADER_TYPES: "JWT"
-  JWT_ACCESS_TOKEN_LIFETIME: "60"  # Access token lifetime in minutes
-  JWT_REFRESH_TOKEN_LIFETIME: "1440"  # Refresh token lifetime in minutes#
+  CORS_ALLOWED_ORIGINS: "http://example-service,http://we-tekup.default.svc.cluster.local,http://we-tekup,http://localhost:3000,http://127.0.0.1:3000,https://khedma123456789.ddns.net"

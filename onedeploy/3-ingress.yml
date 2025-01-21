@@ -1,13 +1,14 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: example-app
+  name: combined-ingress
   namespace: default
   annotations:
     kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m" # Allows handling larger payloads
     nginx.ingress.kubernetes.io/configuration-snippet: |
-      proxy_set_header Host "209.38.113.90";
-      proxy_set_header X-Forwarded-Host "209.38.113.90";
+      proxy_set_header Host "209.38.182.27"; 
+      proxy_set_header X-Forwarded-Host "209.38.182.27"; 
 spec:
   ingressClassName: nginx
   tls:
@@ -29,14 +30,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: we-tekup  
+            name: we-tekup
             port:
               number: 80
-      # - path: /media/
-      #   pathType: Prefix
-      #   backend:
-      #     service:
-      #       name: dummy-service # A dummy service as a placeholder
-      #       port:
-      #         number: 80
 

@@ -9,3 +9,5 @@ data:
   HOST: "0.0.0.0"
   PORT: "3000"
   DANGEROUSLY_DISABLE_HOST_CHECK: "true"
+  REACT_APP_BACKEND_URL: "http://we-tekup.default.svc.cluster.local"
+

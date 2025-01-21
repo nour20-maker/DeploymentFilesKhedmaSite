@@ -22,15 +22,46 @@ spec:
         app: example-app
     spec:
       imagePullSecrets:
-      - name: dockerhub-secret # Make sure this secret exists and is correct
+      - name: dockerhub-secret # Ensure this secret exists in the namespace
       containers:
       - name: example-app
-        image: mohamedamineblibech/frontend:v1.284
+        image: mohamedamineblibech/frontend:v1.363
         ports:
         - containerPort: 3000
+          # - env:
+          #   name: PORT
+          #   value: "3000"
+          #   name: DJANGO_SERVICE_ADDR
+          #   # accesible using the service called and the port of service
+          #   value: "we-tekup:80"
+
         envFrom:
         - configMapRef:
-          name: reactjs-config
+            name: reactjs-config # Reference the correct ConfigMap name
+
+        # Uncomment the following if needed
+        # resources:
+        #   requests:
+        #     memory: "500Mi"
+        #     cpu: "500m"
+        #   limits:
+        #     memory: "800Mi"
+        #     cpu: "500m"
+        # Uncomment volumeMounts if you are using secrets or ConfigMaps
+        # volumeMounts:
+        # - name: secret-volume
+        #   mountPath: /secrets/
+        # - name: config-volume
+        #   mountPath: /configs/
+      # Uncomment volumes if you are using secrets or ConfigMaps
+      # volumes:
+      # - name: secret-volume
+      #   secret:
+      #     secretName: mysecret
+      # - name: config-volume
+      #   configMap:
+      #     name: example-config
+
 ---
 apiVersion: v1
 kind: Service
