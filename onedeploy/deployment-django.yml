@@ -13,7 +13,7 @@ spec:
         app: backend-app
     spec:
       imagePullSecrets:
-        - name: dockerhub-secret
+        - name: digitalocean-registry
       securityContext:
         fsGroup: 1000
       containers:

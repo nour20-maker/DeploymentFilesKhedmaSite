@@ -22,7 +22,7 @@ spec:
         app: example-app
     spec:
       imagePullSecrets:
-      - name: dockerhub-secret # Ensure this secret exists in the namespace
+      - name: digitalocean-registry # Ensure this secret exists in the namespace
       containers:
       - name: example-app
         image: mohamedamineblibech/frontend:v1.384

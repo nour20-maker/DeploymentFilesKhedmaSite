@@ -13,10 +13,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - khedma.site
+    - khedma123456789.ddns.net
     secretName: example-app-tls
   rules:
-  - host: khedma.site
+  - host: khedma123456789.ddns.net
     http:
       paths:
       - path: /
