@@ -25,7 +25,7 @@ spec:
       - name: digitalocean-registry # Ensure this secret exists in the namespace
       containers:
       - name: example-app
-        image: mohamedamineblibech/frontend:v1.384
+        image: digitalocean-registry/frontend:v1.384
         ports:
         - containerPort: 3000
         envFrom:
