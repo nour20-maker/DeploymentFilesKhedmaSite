@@ -4,10 +4,9 @@ metadata:
   name: reactjs-config
   namespace: default
 data:
-  REACT_APP_API_URL: "https://khedma123456789.ddns.net"
-  REACT_APP_PUBLIC_FOLDER: "https://khedma123456789.ddns.net/media/images/"
+  REACT_APP_API_URL: "https://khedma.site"
+  REACT_APP_PUBLIC_FOLDER: "https://khedma.site/media/images/"
   HOST: "0.0.0.0"
   PORT: "3000"
   DANGEROUSLY_DISABLE_HOST_CHECK: "true"
-  REACT_APP_BACKEND_URL: "http://we-tekup.default.svc.cluster.local"
 
