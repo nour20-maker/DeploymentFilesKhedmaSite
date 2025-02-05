@@ -18,7 +18,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: backend-app
-          image: mohamedamineblibech/backend:v1.21
+          image: mohamedamineblibech/backend:v1.22
           ports:
             - containerPort: 80
           envFrom:
