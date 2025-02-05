@@ -34,6 +34,12 @@ spec:
         envFrom:
         - configMapRef:
             name: reactjs-config # Reference the correct ConfigMap name
+      volumes:
+        - name: static-volume-mount
+          persistentVolumeClaim:
+            claimName: static-pvc-local
+
+
 ---
 apiVersion: v1
 kind: Service
