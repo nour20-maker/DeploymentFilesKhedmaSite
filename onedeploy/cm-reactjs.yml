@@ -4,8 +4,6 @@ metadata:
   name: reactjs-config
   namespace: default
 data:
-  # REACT_APP_API_URL: "https://khedma.site"
-  # REACT_APP_PUBLIC_FOLDER: "https://khedma.site/media/images/"
   HOST: "0.0.0.0"
   PORT: "3000"
   DANGEROUSLY_DISABLE_HOST_CHECK: "true"
