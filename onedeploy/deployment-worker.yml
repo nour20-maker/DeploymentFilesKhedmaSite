@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: celery-worker
-          image: mohamedamineblibech/backend:v1.15
+          image: mohamedamineblibech/backend:v1.384
           command: ['sh', '-c', "cd /django/khedma && celery -A khedma worker -l INFO"]
           envFrom:
             - secretRef:
@@ -27,14 +27,8 @@ spec:
           volumeMounts:
             - name: media-volume-mount
               mountPath: /django/khedma/media
-            # - name: static-volume-mount
-            #   mountPath: /django/khedma/static
       volumes:
         - name: media-volume-mount
           persistentVolumeClaim:
             claimName: media-pvc-local
-        # - name: static-volume-mount
-          # persistentVolumeClaim:
-          #   claimName: static-pvc-local
-
             ##
