@@ -25,7 +25,7 @@ spec:
       - name: dockerhub-secret # Ensure this secret exists in the namespace
       containers:
       - name: example-app
-        image: mohamedamineblibech/frontend:v1.25
+        image: mohamedamineblibech/frontend:v1.26
         ports:
         - containerPort: 3000
         volumeMounts:
