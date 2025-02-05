@@ -28,6 +28,9 @@ spec:
         image: mohamedamineblibech/frontend:v1.23
         ports:
         - containerPort: 3000
+        volumeMounts:
+          - name: static-volume-mount
+            mountPath: /reactjs/khedma/public/static  # Path where React stores its static files
         envFrom:
         - configMapRef:
             name: reactjs-config # Reference the correct ConfigMap name
