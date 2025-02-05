@@ -29,15 +29,13 @@ spec:
           volumeMounts:
             - name: media-volume-mount
               mountPath: /django/khedma/media
-            - name: static-volume-mount
-              mountPath: /reactjs/khedma/public/static
+
       volumes:
         - name: media-volume-mount
           persistentVolumeClaim:
             claimName: media-pvc-local
         - name: static-volume-mount
-          persistentVolumeClaim:
-            claimName: static-pvc-local
+
 ---
 apiVersion: v1
 kind: Service
