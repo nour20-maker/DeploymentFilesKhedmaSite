@@ -13,10 +13,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - khedma.zapto.org
+    - testing123456789.zapto.org
     secretName: example-app-tls
   rules:
-  - host: khedma.zapto.org
+  - host: testing123456789.zapto.org
     http:
       paths:
       - path: /
