@@ -5,7 +5,7 @@ metadata:
   namespace: default
 spec:
   dnsNames:
-    - khedma.zapto.org
+    - testing123456789.zapto.org
   secretName: example-app-tls
   issuerRef:
     name: letsencrypt-cluster-issuer
