@@ -7,6 +7,6 @@ data:
   DEBUG: "True"
   REDIS_HOST: "khedma-redis"
   DB_HOST: "postgres-service"
-  ALLOWED_HOSTS: "khedma.zapto.org,we-tekup.default.svc.cluster.local,example-service,we-tekup,combined-ingress"
+  ALLOWED_HOSTS: "testing123456789.zapto.org,we-tekup.default.svc.cluster.local,example-service,we-tekup,combined-ingress"
   REACT_ADDRESS: "http://example-service"
   CORS_ALLOWED_ORIGINS: "http://example-service,http://we-tekup.default.svc.cluster.local,http://we-tekup,http://localhost:3000,http://127.0.0.1:3000,https://testing123456789.zapto.org"
