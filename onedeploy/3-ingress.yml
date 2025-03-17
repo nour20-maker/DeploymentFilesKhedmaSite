@@ -33,4 +33,12 @@ spec:
             name: we-tekup
             port:
               number: 80
+      - path: /societe/
+        pathType: Prefix
+        backend:
+          service:
+            name: we-tekup
+            port:
+              number: 80
+
 
